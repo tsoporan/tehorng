@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'tracking',
     'reporting',
     'polls',
+    'activity',
     #3rd Party
     'haystack',
     'gravatar',
