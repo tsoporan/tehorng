@@ -46,7 +46,7 @@ def add_tracks(request, artist, album):
                 track.uploader = request.user
                 track.album = album
                 track.save()
-                add_object.send(sender=inspect.getstack()[0][3], instance=track, action="Add")
+                add_object.send(sender=inspect.stack()[0][3], instance=track, action="Add")
                 messages.success(request, "Tracks added for %(album)s" % {'album': album})
                 return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
     else:

@@ -54,7 +54,7 @@ def track_album(request, album_obj):
 def track_link(request, object_hash):
 	"""Track external links."""
 	link = get_object_or_404(Link, hash=object_hash)
-	ctype = ContentType.objects.get(name='link')
+	ctype = ContentType.objects.get(name__iexact='link')
 	#try to save a tracked object for this link - else - increment counter
 	try:
 		trk_obj = TrackedLink.objects.get(ctype=ctype, object_id=link.id)

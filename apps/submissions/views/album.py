@@ -15,12 +15,11 @@ from submissions.models.artist import Artist
 from submissions.models.album import Album
 from submissions.models.link import Link
 from tagging.models import Tag, TaggedItem
-from submissions.views.utils import delete_confirm
 from reporting.models import Report
 from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
 from django.views.decorators.cache import cache_page
-from activity.signals import add_object, edit_object
+from activity.signals import add_object, edit_object, delete_object
 import inspect
 
 def album_detail(request, artist, album):
@@ -63,7 +62,7 @@ def add_album(request, artist):
                         is_valid = True, #user added so its most likely valid
                     )
                     album.save()
-                    add_object.send(sender=inspect.getstack()[0][3], instance=album, action="Add")
+                    add_object.send(sender=inspect.stack()[0][3], instance=album, action="Add")
                 except IntegrityError: #duplicate trying to be added
                     messages.error(request, "It seems there was a duplicate album for this tist.")
                     return HttpResponseRedirect(reverse('add-album', args=[artist.slug]))
@@ -93,7 +92,7 @@ def edit_album(request, artist, album):
             a = form.save(commit=False)
             a.last_edit = user.username
             a.save()
-            edit_object.send(sender=inspect.getstack()[0][3], instance=a, action="Edit")
+            edit_object.send(sender=inspect.stack()[0][3], instance=a, action="Edit")
             messages.success(request, "Your changes for \"%s\" have been saved." % (album.name))
             return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
     else:
@@ -173,22 +172,32 @@ def report_album(request, artist, album):
     }, context_instance=RequestContext(request))
 
 @login_required
-def delete_album(request, artist, album):
+def delete_album(request, artist, album, template="tehorng/delete_confirm.html"):
     """
-    A view for deleting an album from the website.
-    Deletes are only allowed for album uploaders and super users.
-    Goes through intermediary page to confirm delete.
+    A view for "deleting" an album from the website. Deleting marks objects is_deleted to True and excludes it from the site.
     """
     artist = Artist.objects.get(slug__iexact=artist)
     album = Album.objects.get(slug__iexact=album, artist=artist)
     
     user = request.user
 
-    if user.is_superuser or user.is_staff or user == album.uploader:
-        return delete_confirm(request, album)
-    elif album.uploader != user:
+    if not (user.is_superuser or user.is_staff or user == album.uploader):
         messages.warning(request, "You don't have permission to do that.")
         return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
+    
+    if request.method == 'POST' and 'yes' in request.POST:        
+        album.is_deleted = True 
+        album.save()
+        delete_object.send(sender=inspect.stack()[0][3], instance=album, action="Delete")
+        messages.success(request, "\"%s\" deleted." % (album.name))
+        return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
+    elif request.method == 'POST' and 'no' in request.POST: 
+        messages.success(request, "Delete cancelled.")
+        return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
+    return render_to_response(template, {
+        'artist': artist,
+        'album': album,
+    }, context_instance=RequestContext(request))
 
 @login_required
 def addresource_album(request, artist, album):

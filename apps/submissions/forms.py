@@ -71,7 +71,7 @@ class ArtistEditForm(ModelForm):
     """
     class Meta:
         model = Artist
-        exclude = ('slug', 'is_valid', 'is_public','is_dmca', 'is_verified', 'uploader', 'got_tracks')
+        fields = ('name', 'image', 'formed', 'origin', 'members', 'biography', 'is_touring', 'tags')
 
 class AlbumForm(ModelForm):
     """
@@ -80,8 +80,8 @@ class AlbumForm(ModelForm):
     #release_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'datepicker'}))
     class Meta:
         model = Album
-        exclude = ('cleaned_name', 'slug','artist','created','is_valid', 'url', 'uploader', 'is_public', 'mbid')
-    
+        fields = ('name', 'image', 'release_date', 'tags')   
+ 
 #    def clean_name(self):
 #        super(AlbumForm, self).clean()
 #        name = self.cleaned_data['name']
@@ -104,13 +104,13 @@ class AlbumEditForm(ModelForm):
     """
     class Meta:
         model = Album
-        exclude = ('cleaned_name', 'slug','artist','created','is_valid', 'url', 'uploader', 'is_public', 'mbid')
+        fields = ('name', 'image', 'release_date', 'tags')
 
 class LinkForm(ModelForm): 
     """Form for adding links to the website. """
     class Meta:
         model = Link
-        exclude = ('uploader', 'album','created', 'reported', 'hash', 'part', 'expires', 'dead')
+        fields = ('url', 'url_type', 'bitrate', 'format')
 
     def clean_url(self):
         super(LinkForm, self).clean()

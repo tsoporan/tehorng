@@ -17,4 +17,3 @@ Just some ideas of what should be added/fixed to tehorng (in no particular order
 - add documentation/guides/instructions, generally just more verbosity in terms of what things are and do (needed badly)
 - __Request__ functionality
 - don't actually delete anything, just remove it from visibility
-- migrate to PostgreSQL

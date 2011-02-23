@@ -17,7 +17,7 @@ from submissions.models.utils import gen_hash
 from django.db.utils import IntegrityError
 from reporting.models import Report
 from django.contrib.contenttypes.models import ContentType
-from activity.signals import add_object, edit_object
+from activity.signals import add_object, edit_object, delete_object
 import inspect
 
 @login_required
@@ -46,7 +46,7 @@ def add_link(request, artist, album):
                         uploader = request.user,
                     ) 
                     link.save()
-                    add_object.send(sender=inspect.getstack()[0][3], instance=link, action="Add")
+                    add_object.send(sender=inspect.stack()[0][3], instance=link, action="Add")
                 except IntegrityError:
                     messages.error(request, "It seems there was a duplicate link for this album.")
                     return HttpResponseRedirect(reverse('add-link', args=[artist.slug, album.slug]))
@@ -76,7 +76,7 @@ def edit_link(request, artist, album, link):
             l = form.save(commit=False)
             l.last_edit = user.username
             l.save()
-            edit_object.send(sender=inspect.getstack()[0][3], instance=l, action="Edit")
+            edit_object.send(sender=inspect.stack()[0][3], instance=l, action="Edit")
             messages.success(request, "Your changes for \"%s\"'s link have been saved." % (album.name))
             return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
     else:
@@ -156,11 +156,9 @@ def report_link(request, artist, album, link):
     }, context_instance=RequestContext(request))
 
 @login_required 
-def delete_link(request, artist, album, link):
+def delete_link(request, artist, album, link, template='tehorng/delete_confirm.html'):
     """
-    A view for deleting an link.
-    Deletes are only allowed by link uploaders.
-    Goes through a intermediary delete confirmation page.
+    A view for "deleting" a link from the website. Deleting marks objects is_deleted to True and excludes it from the site.
     """
     artist = Artist.objects.get(slug__iexact=artist)
     album = Album.objects.get(slug__iexact=album, artist=artist)
@@ -168,8 +166,25 @@ def delete_link(request, artist, album, link):
     
     user = request.user
 
-    if user.is_superuser or user.is_staff or user == link.uploader:
-        return delete_confirm(request, link)
-    elif link.uploader != user:
-        messages.warning(request, "You don't have permission to do that.")
+    if not (user.is_superuser or user.is_staff or user == link.uploader):
         return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
+
+    if request.method == 'POST' and 'yes' in request.POST:
+        link.is_deleted = True
+        link.save()
+        delete_object.send(sender=inspect.stack()[0][3], instance=link, action="Delete")
+        messages.success(request, "\"%s\" deleted." % link)
+        return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
+    elif request.method == 'POST' and 'no' in request.POST:
+        messages.success(request, "Delete cancelled.")
+        return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
+
+    return render_to_response(template, {
+        'artist': artist,
+        'album': album,
+        'link': link,
+    }, context_instance=RequestContext(request))
+
+
+
+

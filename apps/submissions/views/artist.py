@@ -17,7 +17,6 @@ from submissions.models.artist import Artist
 from submissions.models.album import Album
 from submissions.models.link import Link
 from tagging.models import Tag, TaggedItem
-from submissions.views.utils import delete_confirm
 from django.core.paginator import Paginator, InvalidPage
 from reporting.models import Report
 from django.contrib.contenttypes.models import ContentType
@@ -25,7 +24,7 @@ from django.db.utils import IntegrityError
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
-from activity.signals import add_object, edit_object 
+from activity.signals import add_object, edit_object, delete_object 
 import inspect
 
 ALPHABET = ['0-9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
@@ -98,7 +97,7 @@ def artist_list(request, letter=None, filter=None):
         'paginator': paginator,
         'artist_list': page_obj.object_list,
         'artist_list_count': queryset.count(),
-        'total_artists': Artist.objects.filter(is_valid=True).count(),
+        'total_artists': Artist.objects.filter(is_valid=True, is_deleted=False).count(),
         'pending_artists': Artist.objects.filter(is_valid=False).count(),
         'total_albums': Album.objects.filter(is_valid=True).count(),
         'pending_albums': Album.objects.filter(is_valid=False).count(),
@@ -251,20 +250,28 @@ def report_artist(request, artist):
     }, context_instance=RequestContext(request))
 
 @login_required
-def delete_artist(request, artist):
+def delete_artist(request, artist, template="tehorng/delete_confirm.html"):
     """
-    View for deleteing an artist on the website.
-    Only staff can delete artists. Goes through intermediary confirm page.
+    View for "deleteing" an artist on the website. Deleting marks objects is_deleted to True and excludes it from the site.
     """
     artist = Artist.objects.get(slug__iexact=artist)
     
     user = request.user
 
-    if user.is_superuser or user.is_staff:
-        return delete_confirm(request, artist)
-    else:
+    if not (user.is_superuser or user.is_staff or user == artist.uploader):
         messages.warning(request, "You don't have permission to do that.")
         return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
+
+    if request.method == 'POST' and 'yes' in request.POST:        
+        artist.is_deleted = True 
+        artist.save()
+        delete_object.send(sender=inspect.stack()[0][3], instance=artist, action="Delete")
+        messages.success(request, "\"%s\" deleted." % (artist.name,))
+        return HttpResponseRedirect(reverse('artist-index'))
+    elif request.method == 'POST' and 'no' in request.POST: 
+        messages.success(request, "Delete cancelled.")
+        return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
+    return render_to_response(template, {'artist': artist}, context_instance=RequestContext(request))
 
 @login_required
 def addresource_artist(request, artist):

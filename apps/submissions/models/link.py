@@ -54,6 +54,7 @@ class Link(models.Model):
     expires = models.DateTimeField(default=datetime.datetime.now()+datetime.timedelta(days=30), help_text="Link will be checked for expiration every 30 days.")
     dead = models.BooleanField(default=0, help_text="This link is probably dead.")
 
+    is_deleted = models.BooleanField(default=False, help_text="Marks an Artist as deleted meaning it won't appear anywhere on the website, but it is still kept in the database so that certain relations don't freak out.")
 
     class Meta:
         ordering = ('url_type', 'bitrate')

@@ -10,3 +10,4 @@ south
 django-pagination
 django-sentry
 recaptcha-client
+psycopg2

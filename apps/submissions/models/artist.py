@@ -44,6 +44,7 @@ class Artist(models.Model):
     mbid_tracks = models.BooleanField(editable=False, default=False)
     lastfm_valid = models.BooleanField(editable=False, default=False)
     
+    is_deleted = models.BooleanField(default=False, help_text="Marks an Artist as deleted meaning it won't appear anywhere on the website, but it is still kept in the database so that certain relations don't freak out.")
 
     class Meta:
         ordering = ('name',)
@@ -63,6 +64,9 @@ class Artist(models.Model):
             self.slug = slugify(self.name)
         if not self.cleaned_name:
             self.cleaned_name = strip_punc(self.name).lower().strip()
+        
+        if self.is_deleted:
+            self.name = self.name + u" (Deleted)"
         super(Artist, self).save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):

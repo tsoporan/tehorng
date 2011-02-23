@@ -37,6 +37,8 @@ class Album(models.Model):
     mbid_tracks = models.BooleanField(default=False, editable=False)
     lastfm_valid = models.BooleanField(default=False, editable=False)
 
+    is_deleted = models.BooleanField(default=False, help_text="Marks an album as deleted meaning it won't appear anywhereon the website, but it is still kept in the database so that certain relations don't freak out.") 
+
     class Meta:
         ordering = ('name', '-created')
         unique_together = ('artist', 'slug') #album unique per artist
