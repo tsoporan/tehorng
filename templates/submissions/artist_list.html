@@ -85,7 +85,7 @@
     </li>
     {% endif %}
     {% endif %}
-    {% if artist.is_valid and artist.is_public %}
+    {% if artist.is_valid and artist.is_public and not artist.is_deleted %}
     <li id="{{ artist.id }}">
 	 <a href="{% url artist-detail artist.slug %}" title="{{ artist.name }}">
 	 {% if artist.image %}

@@ -41,7 +41,7 @@
 </header> 
 <hr>
 
-{% if artist.is_valid and artist.is_public %}
+{% if artist.is_valid and artist.is_public and not artist.is_deleted %}
 <aside id="sidebar">
 {% if artist.image %}
  <a href="{% url artist-detail artist.slug %}" title="{{ artist }}">
@@ -96,7 +96,7 @@
 </aside> <!-- end sidebar -->
 
 <section id="album-content">
-{% if album and album.is_public %}
+{% if album and album.is_public and not album.is_deleted %}
 	<div id="album">
 	<header>
 	<h2> {{ album.name|title }} </h2>

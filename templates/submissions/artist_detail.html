@@ -49,7 +49,7 @@
 </header> 
 <hr>
 
-{% if artist.is_valid and artist.is_public %}
+{% if artist.is_valid and artist.is_public and not artist.is_deleted %}
 <aside id="sidebar">
 {% if artist.image %}
     {% thumbnail artist.image "250x250" crop="center" as im %}
@@ -109,7 +109,7 @@
 	{% if artist.albums.all %}
 	<ul id="album-list">
 	{% for album in artist.albums.all %}
-    {% if album.is_valid %}
+    {% if album.is_valid and not album.is_deleted %}
     <li class="album">
 		<h4><a href="{% url album-detail artist.slug album.slug %}" title="{{ album.name }}">{{ album.name|title|truncate_chars:40 }}</a></h4>
 		<span class="album-management">
