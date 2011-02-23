@@ -69,6 +69,8 @@ class Link(models.Model):
     def save(self, *args, **kwargs):
         if not self.hash:
             self.hash = gen_hash(self.id)   
+        if self.is_deleted:
+            self.url = self.url + u" (Deleted)"
         super(Link, self).save(*args, **kwargs)
 
     def get_absolute_url(self):

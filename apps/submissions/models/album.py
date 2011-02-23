@@ -56,6 +56,8 @@ class Album(models.Model):
             self.slug = slugify(self.name)
         if not self.cleaned_name:
             self.cleaned_name = strip_punc(self.name)
+        if self.is_deleted:
+            self.name = self.name + u" (Deleted)"
         super(Album, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
