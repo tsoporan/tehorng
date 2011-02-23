@@ -20,6 +20,8 @@ from reporting.models import Report
 from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
 from django.views.decorators.cache import cache_page
+from activity.signals import add_object, edit_object
+import inspect
 
 def album_detail(request, artist, album):
     """
@@ -61,6 +63,7 @@ def add_album(request, artist):
                         is_valid = True, #user added so its most likely valid
                     )
                     album.save()
+                    add_object.send(sender=inspect.getstack()[0][3], instance=album, action="Add")
                 except IntegrityError: #duplicate trying to be added
                     messages.error(request, "It seems there was a duplicate album for this tist.")
                     return HttpResponseRedirect(reverse('add-album', args=[artist.slug]))
@@ -90,6 +93,7 @@ def edit_album(request, artist, album):
             a = form.save(commit=False)
             a.last_edit = user.username
             a.save()
+            edit_object.send(sender=inspect.getstack()[0][3], instance=a, action="Edit")
             messages.success(request, "Your changes for \"%s\" have been saved." % (album.name))
             return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
     else:

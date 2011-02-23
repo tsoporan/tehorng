@@ -17,6 +17,8 @@ from submissions.models.utils import gen_hash
 from django.db.utils import IntegrityError
 from reporting.models import Report
 from django.contrib.contenttypes.models import ContentType
+from activity.signals import add_object, edit_object
+import inspect
 
 @login_required
 def add_link(request, artist, album):
@@ -43,7 +45,8 @@ def add_link(request, artist, album):
                         hash = gen_hash(data['url']),
                         uploader = request.user,
                     ) 
-                    link.save()# so this right? tha t should work let me just check something  
+                    link.save()
+                    add_object.send(sender=inspect.getstack()[0][3], instance=link, action="Add")
                 except IntegrityError:
                     messages.error(request, "It seems there was a duplicate link for this album.")
                     return HttpResponseRedirect(reverse('add-link', args=[artist.slug, album.slug]))
@@ -73,6 +76,7 @@ def edit_link(request, artist, album, link):
             l = form.save(commit=False)
             l.last_edit = user.username
             l.save()
+            edit_object.send(sender=inspect.getstack()[0][3], instance=l, action="Edit")
             messages.success(request, "Your changes for \"%s\"'s link have been saved." % (album.name))
             return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
     else:

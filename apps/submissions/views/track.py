@@ -21,6 +21,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.forms.models import modelformset_factory
 from django.forms.models import model_to_dict
 from django.forms.models import inlineformset_factory
+from activity.signals import add_object, edit_object
+import inspect
 
 @login_required
 def add_tracks(request, artist, album):
@@ -44,6 +46,7 @@ def add_tracks(request, artist, album):
                 track.uploader = request.user
                 track.album = album
                 track.save()
+                add_object.send(sender=inspect.getstack()[0][3], instance=track, action="Add")
                 messages.success(request, "Tracks added for %(album)s" % {'album': album})
                 return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
     else:
@@ -96,6 +99,4 @@ def manage_tracks(request, artist, album):
         'formset': formset,
     }, context_instance=RequestContext(request))
             
-
-
 

@@ -25,7 +25,7 @@ from django.db.utils import IntegrityError
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
-from activity.signals import add_object, edit_object, delete_object 
+from activity.signals import add_object, edit_object 
 import inspect
 
 ALPHABET = ['0-9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
