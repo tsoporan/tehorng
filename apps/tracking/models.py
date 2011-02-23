@@ -10,6 +10,16 @@ class TrackedManager(models.Manager):
         return sum([obj['hits'] for obj in hits])
 
 
+class Hit(models.Model):
+    user = models.ForeignKey(User)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    timestamp = models.DateTimeField(default=datetime.datetime.now)
+
+    def __unicode__(self):
+        return u"%s hit on %s" % (self.user.username, self.content_object)
+
 class TrackedObject(models.Model):
     """
     A tracked object is incrememnted when it is "used".

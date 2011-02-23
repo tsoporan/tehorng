@@ -8,7 +8,6 @@ from submissions.models.link import Link
 from datetime import datetime, timedelta
 from django.core import serializers
 
-
 def track_artist(request, artist_obj):
 	"""
 	An artist gets tracked when it's page is hit (artist detail)
