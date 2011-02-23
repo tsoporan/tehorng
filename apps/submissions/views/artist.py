@@ -25,7 +25,8 @@ from django.db.utils import IntegrityError
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
-
+from activity.signals import add_object, edit_object, delete_object 
+import inspect
 
 ALPHABET = ['0-9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 
@@ -133,7 +134,7 @@ def artist_detail(request, artist):
     )
 
 @login_required
-def add_artist(request):
+def add_artist(request, template='submissions/addartist.html'):
     """
     View for adding new artist to the website.
     """
@@ -147,16 +148,18 @@ def add_artist(request):
             if user.is_staff:
                 artist.is_valid = True #because a user is adding we need to review this first
                 artist.save()
+                add_object.send(sender=inspect.stack()[0][3], instance=artist, action="Add")
                 messages.success(request, "Artist added successfully. (Since you are staff)")
                 return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
             else:
                 artist.is_valid = False #because a user is adding we need to review this first
                 artist.save()
+                add_object.send(sender=inspect.stack()[0][3], instance=artist, action="Add")
                 messages.success(request, "Thanks! Artist has been queued up for approval. =)")
                 return HttpResponseRedirect(reverse('artist-index'))
     else:
         form = ArtistForm()
-    return render_to_response('submissions/addartist.html', {
+    return render_to_response(template, {
         'form': form,
     }, context_instance=RequestContext(request))
 
@@ -171,9 +174,10 @@ def edit_artist(request, artist):
     if request.method == 'POST':
         form = ArtistEditForm(request.POST, request.FILES, instance=artist)
         if form.is_valid():
-            a = form.save(commit=False)
-            a.last_edit = user.username
-            a.save()
+            artist = form.save(commit=False)
+            artist.last_edit = user.username
+            artist.save()
+            edit_object.send(sender=inspect.stack()[0][3], instance=artist, action="Edit")
             messages.success(request, "Your changes for \"%s\" have been saved." % (artist.name))
             return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
     else:
@@ -195,7 +199,6 @@ def report_artist(request, artist):
         if form.is_valid():
             cd = form.cleaned_data
             reason = cd['reason']   
-            
             try:
                 report = Report( #save new report object
                     user = request.user,
