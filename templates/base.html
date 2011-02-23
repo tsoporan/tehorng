@@ -62,7 +62,7 @@
 <div id="content">
 {% block user_messages %}
 {% if unread %}
-    <p class="messages"><strong>You have <a href="{% url inbox %}#last" title="inbox">{{ unread.count }}</a> unread messages!</strong></p>
+    <p class="messages"><strong>You have <a href="{% url inbox %}" title="inbox">{{ unread.count }}</a> unread messages!</strong></p>
 {% endif %}
 {% if messages %}
     <ul class="request-messages">
