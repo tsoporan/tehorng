@@ -1,0 +1,6 @@
+{{ object.name }}
+{{ object.cleaned_name }}
+{{ object.album }}
+{{ object.album.artist }}
+{{ object.mbid }}
+

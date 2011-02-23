@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block page_title %}add album for {{ artist.name }}{% endblock %}
+{% block body_class %}addalbum{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(document).ready(function () {
+   	function cloneMore(selector, type) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_form-TOTAL_FORMS').val();
+		newElement.find(':input').each(function() {
+    var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+      var id = 'id_' + name;
+      $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+    });
+    	newElement.find('label').each(function() {
+    	var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+        $(this).attr('for', newFor);
+    	});
+   	  total++;
+   	  $('#id_form-TOTAL_FORMS').val(total);
+  	  $(selector).after(newElement);
+		}
+ 
+						
+			$('input[type="button"]').click(function() {
+				cloneMore('ul.addalbumlist:last', 'album');
+			});
+    
+    //datepicker
+    //$('.datepicker').datepicker({
+    //    dateFormat: 'yy-mm-dd'         
+    //});
+
+    });
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist}}">{{ artist }}</a> &raquo;</li>
+	<li> Add Album </li>
+{% endblock %}
+
+{% block header %} Add Album for <span class="orng">{{ artist }}</span> {% endblock %}
+
+{% block content %}
+<p>Required fields are <strong>Name</strong> and <strong>Tags</strong>. Tags is a comma seperated list of tags like: <strong>rock, praise</strong>.
+Release date is in the format <strong>yyyy-mm-dd</strong> (2010-03-09)</p>
+<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ formset.management_form }}
+		{% if formset.non_form_errors %}
+        <ul class="errorlist">
+        {% for error in  formset.non_form_errors %}
+            <li>{{ error }} </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% for form in formset.forms %}
+			<ul class="addalbumlist">
+    		{% for field in form %}
+				 <li>
+				 	  {{ field.label_tag }}
+						{{ field }}
+				 		{{ field.errors }}
+				 </li>
+				{% endfor %}
+			</ul>
+		{% endfor %}
+    <div class="inpwrap">
+        <input type="button" value="Add Slot">
+        <input type="submit" value="Submit"> or <a href="{% url artist-detail artist.slug %}" title="cancel">cancel</a>
+    </div>
+</form>
+{% endblock %}

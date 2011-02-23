@@ -1,0 +1,23 @@
+{% extends 'base.html'%}
+{% block page_title %} report artist {{ artist.name }} {% endblock %}
+{% block body_class %}report-artist{% endblock %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist}}">{{ artist }}</a> &raquo;</li>
+	<li>Report {{ artist }}</li>
+{% endblock %}
+{% block header %}Report {{ artist.name }}{% endblock %}
+{% block content %}
+<p> Be as specific as you can, and please use english. </p>
+<form action="" method="post"> {% csrf_token %}
+	{% for field in form %}
+	{{ field.errors }}
+    <p><strong>{{ field.label }}</strong></p>
+	<p>{{ field }}</p>
+	<p class="helptext"> {{ field.help_text }} </p>
+	{% endfor %}
+	<input type="submit" value="Submit"> or <a href="{% url artist-detail artist.slug %}" title="cancel">cancel</a>
+
+</form>
+{% endblock %}

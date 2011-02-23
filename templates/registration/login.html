@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block page_title %}login{% endblock %}
+{% block body_class %}login{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="home">Home</a> &raquo;</li>
+	<li>Login</li>
+{% endblock %}
+
+{% block header %}Log In{% endblock %}
+{% block content %}
+<p> Don't have an account? <a href="{% url register %}">Register</a> its quick and easy! ;)</p>
+<form id="account" action="" method="post"> {% csrf_token %}
+	{{ form.as_p }}
+	<p><input type="submit" value="log in"></p>
+	<input type="hidden" value="{{ next }}">
+	<p><a class="forgotpass" href="{% url password-reset %}">Forgot password?</a></p>
+</form>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% load thumbnail %}
+{% for artist in artist_list %}
+   {% if artist.is_valid and artist.is_public %}
+   <li id="{{ artist.id }}">
+	 <a href="{% url artist-detail artist.slug %}" title="{{ artist.name }}">
+	 {% if artist.image %}
+	 		<img src="{% thumbnail artist.image 100x100 crop %}" height="100" width="100" alt="{{ artist.name }} image">
+	 {% else %}
+	 		<img src="{% thumbnail 'img/noimgartist.jpg' 100x100 crop %}" height="100" width="100" alt="no artist image">
+	 {% endif %}
+		<span>{{ artist }}</span>
+	 </a>
+   </li>
+   {% endif %}
+{% endfor %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block page_title %}register{% endblock %}
+{% block body_class %}register{% endblock %} 
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="home">Home</a> &raquo;</li>
+	<li>Register</li>
+{% endblock %}
+{% block header %}Register{% endblock %}
+{% block content %}
+<p> Registration is easy, just fill in the required fields and you're ready to go!</p>
+<form id="account" action="" method="post"> {% csrf_token %}
+    {{ form.as_p }}
+	{{ captcha }}
+    <p><input type="submit" value="Register"></p>
+</form>
+{% endblock %}

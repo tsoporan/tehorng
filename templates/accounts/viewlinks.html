@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block page_title %}viewlinks for {{ profile.user }}{% endblock %}
+{% block body_class %}viewlinks{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li><a href="{% url profile-user profile.user %}" title="{{ profile.user }} profile">{{ profile.user }} Profile</a> &raquo;</li>
+    <li>View Links </li>
+{% endblock %}
+
+{% block header %} View Links {% endblock %}
+
+{% block content %}
+{% if links_list %}
+<ul class="user-links">
+{% for link in links_list %}
+    <li>
+        <a href="{% url track-link link.hash %}" title="{{ link }}">{{ link }}</a><span class="helptext"> {{ link.created|timesince }} ago</span>
+        <p class="helptext">{{ link.album.artist }} - {{ link.album }}</p>
+    </li>
+{% endfor %}
+</ul>
+<ul class="pagination">
+{% for p in page_range %}
+    <li><a {% if p == page %}class="current"{% endif %} href="?page={{ p }}" title="">{{ p }}</a>
+{% endfor %}
+</ul>
+
+{% else %}
+<p> You haven't added any links. =( </p>
+{% endif %}
+{% endblock %}
+

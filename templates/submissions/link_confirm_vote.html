@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3> Confirm your Vote </h3>
+<p> You are voting: <strong>{{ direction }} </strong></p>
+<form action="" method="post"> {% csrf_token %}
+	<input type="submit" value="confirm" name="submit"> 
+	<input type="hidden" name="next" value="{% url artist-detail link.album.artist.slug %}">
+</form>
+{% endblock %}

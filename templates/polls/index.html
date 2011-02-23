@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block meta_desc %} {% endblock %}
+{% block meta_keyw %} {% endblock %}
+
+{% block page_title %}Polls{% endblock %}
+{% block body_class %}polls{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a>&raquo;</li>
+	<li>Polls</li>
+{% endblock %}
+
+{% block header %}Polls{% endblock %}
+
+{% block content %}
+<p> A list of the latest polls on tehorng. </p>
+
+{% if polls %}
+    <ul id="poll-list">
+    {% for poll in polls %}
+        <li><a href="{% url poll-detail poll.id %}" title="{{ poll }}"><strong>{{ poll.id }}.</strong> {{ poll }}<span><strong>Created</strong>: {{ poll.created|date:"F j Y" }}</span></a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>There are <strong>no</strong> polls yet.</p>
+{% endif %}
+
+{% endblock %}

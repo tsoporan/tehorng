@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block page_title %} {{ user.username }} profile. {% endblock %}
+{% block body_class %}profile{% endblock %}
+{% load gravatar %}
+
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li> {{ user }} Profile </li>
+{% endblock %}
+{% block header %} {{ user.username }} Profile <a class="change" href="{% url change-password %}" title="change password">change password</a>{% endblock %}
+
+{% block content %}
+<section id="user-info">
+	<div class="img-contain">
+        <a href="http://gravatar.com" title="Gravatar">{% gravatar user 128 %}</a>
+	</div>
+	<div class="info-contain">
+		<h3> 
+            {% if user.is_staff %}
+                {% if user.is_superuser %} <span class="admin">Admin</span> {% else %} <span class="staff">Staff</span> {% endif %}
+            {% else  %}
+                <span class="user">User</span> 
+            {% endif %}
+        </h3>
+        <p><strong> username:</strong> {{ user.username }} <a class="change" href="{% url change-username %}" title="change username">change</a></p>
+		<p><strong> email: </strong> {{ user.email }} <a class="change" href="{% url change-email %}" title="change email">change</a></p>
+		<p><strong> last login: </strong> {{ user.last_login|timesince }} ago </p>
+		<p><strong> date joined:</strong> {{ user.date_joined|timesince }} ago </p>
+		{% if user.groups.all %}
+			<p> <strong>groups:</strong> {% for g in user.groups.all %} {{ g }} {% endfor %} </p>
+		{% endif %}
+		<p><strong>online:</strong> {% if user.online.online %} <span class="g b">Yes</span> {% else %} <span class="r b">No</span> {% endif %}</p>
+    </div>
+    
+    <div class="stats-contain">
+	
+    {% if reports %}
+    <div class="reports-contain">
+        <h3>You have <strong class="r">{{ reports.count }}</strong> reports!</h3>
+        <ul class="reports-list">
+        {% for report in reports %}
+            <li><span class="type">{{ report.ctype }}</span><span class="object">{{ report.object }}</span><span class="reason">{{ report.reason }}</span></li> 
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+    <div class="box">
+    <h3> artists by you <span class="orng">{{ profile.artists_for_user.count }}</span><a class="rss" href="{% url user-artist-feed user %}" title="{{ user }} artists feed"><img src="/media/img/rss_14.png" alt=""></a> </h3>
+	<ul>
+		{% if artists_for_user %}
+		{% for artist in artists_for_user %}
+		<li>
+			<a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist }}</a><span class="helptext"> {{ artist.created|timesince }} ago</span>
+		</li>
+		{% endfor %}
+		<li style="margin: 10px 0; border: none"><a href="{% url view-artists %}" class="view" title="View all">View All</a></li>
+		{% else %}
+		<p>No artists were added by you.</p>
+		{% endif %}
+	</ul>
+    </div> <!-- end box -->
+
+    <div class="box">
+	<h3> albums by you <span class="orng">{{ profile.albums_for_user.count }} </span> <a class="rss" href="{% url user-album-feed user %}" title="{{ user }} albums feed"><img src="/media/img/rss_14.png" alt=""></a></h3>
+	<ul>
+		{% if albums_for_user %}
+		{% for album in albums_for_user %}
+		<li>
+			<a href="{% url album-detail album.artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> <span class="helptext"> {{ album.created|timesince }} ago</span>
+			<p class="helptext">{{ album.artist }} </p>	
+		</li>
+		{% endfor %}
+		<li style="margin: 10px 0; border: none"><a href="{% url view-albums %}" class="view" title="View all">View All</a></li>
+		{% else %}
+		<p> No albums were added by you.</p>
+		{% endif %}
+	</ul>
+    </div> <!-- end box -->
+    
+    <div class="box">
+	<h3> links by you <span class="orng">{{ profile.links_for_user.count }}</span><a class="rss" href="{% url user-link-feed user %}" title="{{ user }} links feed"><img src="/media/img/rss_14.png" alt=""></a></h3>
+	<ul>
+		{% if links_for_user %}
+		{% for link in links_for_user %}
+		<li>
+			<a href="{% url track-link link.hash %}" title="link for {{ link.album }}">{{ link|urlizetrunc:50 }}</a><span class="helptext"> {{ link.created|timesince }} ago</span>
+			<p class="helptext">{{ link.album.artist }} - {{ link.album }}</p>
+		</li>
+		{% endfor %}
+		<li style="margin: 10px 0; border: none"><a href="{% url view-links %}" class="view" title="View all">View All</a></li>
+        {% else %}
+		<p> No links were added by you.</p>
+		{% endif %}
+	</ul>
+    </div> <!-- end box -->
+	
+    </div>
+</section>
+
+{% endblock %}

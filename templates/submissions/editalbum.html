@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block page_title %}edit album {{ album.name }}{% endblock %}
+{% block body_class %}editalbum{% endblock %}
+{% load thumbnail %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist}}">{{ artist }}</a> &raquo;</li>
+	<li><a href="{% url album-detail artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> &raquo;</li>
+    <li> Edit {{ album }} </li>
+{% endblock %}
+
+{% block header %}edit {{ album }}{% endblock %}
+
+{% block content %}
+{% if user.is_staff or user == album.uploader %}
+<form id="edit" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+	{% for field in form %}
+	{{ field.errors }}
+	<p><strong> {{ field.label }}: </strong> </p>
+	{% if field.name == "image" %}
+		{% if album.image %}
+		<p>
+        {% thumbnail album.image "150x150" crop="center" as im %}
+        <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}">
+        {% endthumbnail %}
+        </p>
+		{% endif %}
+	{% endif %}
+	<p>{{ field }}</p>
+	<p class="helptext">{{ field.help_text }}</p>
+	{% endfor %}
+	<input type="submit" value="Save"> or <a href="{% url album-detail artist.slug album.slug %}" title="cancel">cancel</a>
+</form>
+{% else %}
+<p> Permission denied. You aren't the uploader of this album. </p>
+{% endif %}
+{% endblock %}

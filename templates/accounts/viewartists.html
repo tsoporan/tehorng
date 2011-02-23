@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block page_title %}viewartists for {{ profile.user }}{% endblock %}
+{% block body_class %}viewartists{% endblock %}
+
+{% block breadcrumbs %} 
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li><a href="{% url profile-user profile.user %}" title="{{ profile.user }} profile">{{ profile.user }} Profile</a> &raquo;</li>
+    <li>View Artists </li>
+{% endblock %}
+
+{% block header %} View Artists {% endblock %}
+
+{% block content %}
+{% if artists_list %}
+<ul class="user-artists">
+{% for artist in artists_list %}
+    <li>
+        <a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist }}</a><span class="helptext"> {{ artist.created|timesince }} ago</span>
+    </li>
+{% endfor %}
+</ul>
+
+<ul class="pagination">
+{% for p in page_range %}
+    <li><a {% if p == page %}class="current"{% endif %} href="?page={{ p }}" title="">{{ p }}</a>
+{% endfor %}
+</ul>
+
+{% else %}
+<p> You haven't added any artists. =( </p>
+{% endif %}
+{% endblock %}
+

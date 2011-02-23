@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block page_title %}logout{% endblock %}
+{% block body_class %}logout{% endblock %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="home">Home</a> &raquo;</li>
+	<li>Logout</li>
+{% endblock %}
+{% block header %}Logged Out{% endblock %}
+{% block content %}
+<p>Thank you for spending time on tehorng today!</p>
+{% endblock %}

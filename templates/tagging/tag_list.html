@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block page_title %}tag list{% endblock %}
+{% block body_class %}tag-list{% endblock %}
+{% load tagging_tags %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	{% if filter %}
+	<li><a href="{% url tag-index %}" title="Tag List">Tag List</a> &raquo;</li>
+	<li>{{ filter|title }}</li>
+	{% else %}
+	<li>Tag List</li>
+	{% endif %}
+{% endblock %}
+{% block header %} Tag List {% endblock %}
+{% block content %}
+<aside id="sidebar">
+<h3> filter by </h3>
+	<ul class="filter-list">
+		<li>&raquo; <a {% if not filter or filter == 'artists' %}class="current"{% endif %} href="{% url tag-list 'artists' %}" id="artists">Artist Tags</a> </li>
+		<li>&raquo; <a {% if filter == 'albums' %}class="current"{% endif %} href="{% url tag-list 'albums' %}" id="albums">Album Tags</a></li>
+		<li>&raquo; <a {% if filter == 'blogs' %}class="current"{% endif %} href="{% url tag-list 'blogs' %}" id="blog">Blog Tags</a></li>
+	</ul>
+</aside>
+
+<section id="tag-content">
+{% if tag_list %}
+<ul id="tag-list">
+	{% for tag in tag_list %}
+	{% if filter %}
+		<li><a class="tag-size-{{ tag.font_size }}" href="{% url tag-detail filter tag.id %}" rel="tag">{{ tag }}</a></li>
+	{% else %}
+		<li><a class="tag-size-{{ tag.font_size }}" href="{% url tag-detail 'artists' tag.id %}" rel="tag">{{ tag }}</a></li>
+	{% endif %}
+	{% endfor %}
+</ul>
+{% else %}
+	<p> There are <strong>no tags</strong>. </p>
+{% endif %}
+</section> <!-- end tag content -->
+{% endblock %}

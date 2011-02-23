@@ -1,0 +1,137 @@
+ <!DOCTYPE html>
+<!--
+    Oranges are good for you and so is learning! Feel free to use the code you find throughout tehorng in any way you'd like. 
+    You can learn more about how we built this site by visitng our /about/ us page. Happy surfing!
+    -staff@tehorng.com
+-->
+<html lang="en">
+<head>
+    <title> tehorng : {% block page_title %} squeeze some new tunes into your life {% endblock %} </title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <meta name="description" content="{% block meta_desc %}tehOrng is a search engine for music. Test drive new music and then support the artists!{% endblock %}">
+    <meta name="keywords" content="{% block meta_keyw %}tehorng,teh orng,the orng,the orange,christian downloads,christiandl,christian downloads,music downloads,christian music,music search{% endblock %}">
+    <meta name="google-site-verification" content="M1dQivSlLDhcAoxiQo_qmd9_3o1w-ttqhXrFZ23uFBE">
+    <meta name="msvalidate.01" content="5B34C2CCEFDA8F0FFDA4ADAEF260B256">
+    <meta name="y_key" content="bbf43d644505c4ab">
+    <link rel="icon" type="image/png" href="/media/img/orangefav.png">
+    <link rel="alternate" type="application/rss+xml" title="Latest Artists" href="/feeds/artists/">
+    <link rel="alternate" type="application/rss+xml" title="Latest Albums" href="/feeds/albums/">
+    <link rel="alternate" type="application/rss+xml" title="Latest Links" href="/feeds/links/">
+    <link rel="alternate" type="application/rss+xml" title="Latest Blog Posts" href="/feeds/entries/">
+
+    <!-- CSS -->
+    {% block css %}
+    <link rel="stylesheet" type="text/css" href="/media/css/global.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/media/css/jquery-ui.css" media="screen">
+    {% endblock %}
+    <!-- JS -->
+    {% block js %}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+    <!--[if IE]>
+    <script type="text/javascript" src="/media/js/html5.js"></script>
+    <![endif]-->
+    {% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<div id="wrapper">
+<header>
+    <h1><a href="{% url index %}" title="tehorng - squeeze some new tunes into your life">tehorng</a></h1>
+    <nav>
+        <ul>
+            <li><a href="{% url search %}" title="search">search</a></li>
+            <li><a href="{% url artist-index %}" title="artists">artists</a></li>
+            <li><a href="{% url tag-index %}" title="tags">tags</a></li>
+            <li><a href="{% url entry-list %}" title="weblog">blog</a></li>
+        </ul>
+        <ul id="account-nav">
+        {% if user.is_authenticated %}
+            <li><a href="{% url inbox %}" title="{{ user }} inbox.">inbox (<span class="inbox">{{ user_messages.count }}</span>)</a> |</li>
+            <li><a href="{% url profile %}" title="{{ user }} profile.">profile</a> |</li>
+            {% if user.is_staff %}
+            <li><a class="admin" href="/admin/" title="admin backend">admin</a> |</li>
+            {% endif %}
+            <li><a href="{% url logout %}" title="logout">logout <span class="username">({{ user.username }})</span></a></li>
+        {% else %}
+            <li><a href="{% url login %}" title="log in to tehorng">login</a> <span class="gray b">or</span></li>
+            <li><a href="{% url register %}" title="register on tehorng">register</a></li>
+        {% endif%}
+        </ul>
+    </nav>
+</header>
+<div id="content">
+{% block user_messages %}
+{% if unread %}
+    <p class="messages"><strong>You have <a href="{% url inbox %}#last" title="inbox">{{ unread.count }}</a> unread messages!</strong></p>
+{% endif %}
+{% if messages %}
+    <ul class="request-messages">
+    {% for message in messages %}
+        <li class="{{ message.tags }}"> {{ message }} </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
+<ul id="breadcrumbs">
+    {% block breadcrumbs %}{% endblock %}
+</ul>
+<h2 class="header">{% block header %} {% endblock %}</h2>
+{% block content %}{% endblock %}
+</div> <!-- end content -->
+</div> <!-- end wrapper -->
+<footer>
+    <div id="footer-cont">
+    <ul id="footer-site">
+        <li><h4>where do we go from here</h4></li>
+        <li><a href="{% url index %}" title="home">home</a></li>
+        <li><a href="{% url django.contrib.flatpages.views.flatpage url='about' %}" title="about">about</a></li>
+        <li><a href="{% url django.contrib.flatpages.views.flatpage url='guide' %}" title="guide">guide</a></li>
+        <li><a href="{% url django.contrib.flatpages.views.flatpage url='faq' %}" title="frequently asked questions">faq</a></li>
+        <li><a href="{% url django.contrib.flatpages.views.flatpage url='dmca' %}" title="dmca">dmca</a></li>
+        <li><a href="{% url contact %}" title="contact us">contact</a></li>
+    </ul>
+    <ul id="footer-social">
+        <li><h4>the social stuff</h4></li>
+        <li><a href="http://twitter.com/tehorng" title="tehorng twitter">twitter</a></li>
+        <li><a href="http://www.facebook.com/pages/TehOrng/213907907556" title="tehorng facebook">facebook</a></li>
+        <li><a href="http://tehorng.com/irc/" title="tehorng irc">our IRC</a></li>
+    </ul>
+    <form id="footer-search" action="/search/" method="GET">
+        <h4>thirsty?</h4>
+        <input type="text" id="id_q" value="quick search" name="q">
+        <input type="submit" value="squeeze">
+    </form>
+    </div> <!-- end footer container -->
+    <div id="online">
+        <p class="copy"><strong>{% now "Y" %}</strong> <strong>tehorng.com</strong></p>
+        <p class="info"><strong>Online</strong>: {{ online_users }} <span>Users</span> | {{ online_guests }} <span>Guests</span></p>
+    </div>
+</footer><!-- end footer -->
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-11977941-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- End GA -->
+
+<!-- Start Quantcast tag -->
+<script type="text/javascript">
+_qoptions={
+qacct:"p-74PSZN6GqB94o"
+};
+</script>
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-74PSZN6GqB94o.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/>
+</noscript>
+<!-- End Quantcast tag -->
+</body> <!-- teh end =( -->
+</html>
+

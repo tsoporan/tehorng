@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block page_title %}edit link for {{ album.name }}{% endblock %}
+{% block body_class %}editlink{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist}}">{{ artist }}</a> &raquo;</li>
+	<li><a href="{% url album-detail artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> &raquo;</li>
+	<li>Edit Link</li>
+{% endblock %}
+
+{% block header %}edit link {{ link }}{% endblock %}
+
+{% block content %}
+{% if user.is_staff or user == link.uploader %}
+<form action="" method="post"> {% csrf_token %}
+	{% for field in form %}
+	{{ field.errors }}
+	<p><strong> {{ field.label }}: </strong> </p>
+	<p> {{ field }}
+	<p class="helptext"> {{ field.help_text }} </p>
+	{% endfor %}
+	<input type="submit" value="Save"> or <a href="{% url album-detail artist.slug album.slug %}" title="cancel">cancel</a>
+</form>
+{% else %}
+    <p> Permission denied. You aren't the uploader of this link.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,4 @@
+{{ object.name }}
+{{ object.cleaned_name }}
+{{ object.mbid }}
+{{ object.tags }}

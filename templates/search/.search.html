@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block page_title %}search{% endblock %}
+{% block body_class %}search{% endblock %}
+{% block content %}
+<h2><span class="orng">orng</span> search</h2>
+
+<form id="search" method="get" action="">
+	{% for field in form %}
+		<p>{{ field }}</p>
+	{% endfor %}
+<input type="submit" value="squeeze">
+
+{% if page.object_list %}
+<h3> Results </h3>
+{% if artist_results %}
+	<h4> Artists </h4>
+	{% for result in artist_results %}
+	<p class="result">
+	<a href="{{ result.object.get_absolute_url }}"><strong>{{ result.object.name }}</strong></a> <span class="helptext">score: {{ result.score }}</span>
+	</p>
+	{% endfor %}
+{% endif %}
+{% if album_results %}
+	<h4> Albums </h4>
+	{% for result in album_results %}
+	<p class="result">
+	<a href="{{ result.object.get_absolute_url }}"><strong>{{ result.object.name }}</strong></a> <span class="helptext">score: {{ result.score }}</span>
+	</p>
+	{% endfor %}
+{% endif %}
+{% if tag_results %}
+	<h4> Tags </h4>
+	{% for result in tag_results %}
+	<p class="result">
+	<a href="{{ result.object.get_absolute_url }}"><strong>{{ result.object.name }}</strong></a> <span class="helptext">score: {{ result.score }}</span>
+	</p>
+	{% endfor %}
+{% endif %}
+{% else %}
+<h3> Results </h3>
+<p><strong>No results found. =(</strong> </p>
+{% endif %}
+</form>
+{% endblock %}

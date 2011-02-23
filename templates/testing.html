@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block css %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="/media/css/jquery.autocomplete.css">
+{% endblock %}
+{% block js %}
+	{{ block.super }}
+	<script type="text/javascript" src="/media/js/jquery.autocomplete.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function () {
+		//$('body').mousemove(function(e) {
+		//	alert(e.pageX);
+		//});
+		$('#test li').each(function(index, el) {
+			if (this.style.color != 'blue') {
+				this.style.color = 'blue';
+			}
+			if ( index == '3') {
+				this.style.color ='red';
+			}
+		});
+	
+	function cloneMore(selector, type) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_form-TOTAL_FORMS').val();
+		newElement.find(':input').each(function() {
+        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+        var id = 'id_' + name;
+        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+    });
+    newElement.find('label').each(function() {
+        var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+        $(this).attr('for', newFor);
+    });
+    total++;
+    $('#id_form-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+	}
+  $('#add').click(function() {
+       cloneMore('div.linktable:last', 'link');
+   });
+
+
+	});
+	</script>
+{% endblock %}
+{% block content %}
+
+<h3> Testing Page </h3>
+<ul id="test">
+	<li> test1 </li>
+	<li> test2 </li>
+	<li> test3 </li>
+	<li> test4 </li>
+	<li> test5 </li>
+</ul>
+
+<form action="" method="post"> {% csrf_token %}
+	{{ formset.management_form }}
+	{% for form in formset.forms %}
+		<div class="linktable">
+		<table class="no_error">
+		{{ form.as_table }}
+		</table>
+		</div>
+	{% endfor %}
+	<input type="submit" value="Submit" name="submit">
+</form>
+<input id="add" type="button" value="Add Link">
+{% endblock %}
+
+

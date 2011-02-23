@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block page_title %} {{ profile.user }} profile. {% endblock %}
+{% block body_class %}profile{% endblock %}
+{% load gravatar %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li> {{ profile.user }} Profile </li>
+{% endblock %}
+{% block header %} {{ profile.user }} Profile {% endblock %}
+
+{% block content %}
+<section id="user-info">
+	<div class="img-contain">
+		<a href="http://gravatar.com" title="Gravatar">{% gravatar profile.user 128 %}</a>
+		<p><a class="send" href="{% url sendpm-user profile.user %}" title="Send PM to {{ profile.user }}">Send PM</a> <a class="report" href="{% url report-user profile.user %}" title="Report {{ profile.user }}">Report</a></p>
+	</div>
+	<div class="info-contain">
+        <h3> 
+            {% if profile.user.is_staff %}
+                {% if profile.user.is_superuser %}<span class="admin"> Admin</span> {% else %} <span class="staff">Staff</span> {% endif %}
+            {% else  %}
+                <span class="user">User</span> 
+            {% endif %}
+        </h3>
+
+	    <p><strong> username:</strong> {{ profile.user.username }} </p>
+		<p><strong> last login: </strong> {{ profile.user.last_login|timesince }} ago </p>
+		<p><strong> date joined:</strong> {{ profile.user.date_joined|timesince }} ago </p>
+		{% if profile.user.groups.all %}
+			<p> <strong>groups:</strong> {% for g in profile.user.groups.all %} {{ g }} {% endfor %} </p>
+		{% endif %}
+		<p><strong>online:</strong> {% if profile.user.online.online %} <span class="g b">Yes</span> {% else %} <span class="r b">No</span> {% endif %}</p>
+    
+    </div>
+   
+    <div class="stats-contain">
+
+    <div class="box">
+    <h3> artists by {{ profile.user }} <span class="orng">{{ profile.artists_for_user.count }}</span><a class="rss" href="{% url user-artist-feed profile.user %}" title="{{ profile.user }} artists feed"><img src="/media/img/rss_14.png" alt=""></a> </h3>
+	<ul class="user-artists">
+		{% if artists_for_user %}
+		{% for artist in artists_for_user %}
+		<li>
+			<a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist }}</a><span class="helptext"> {{ artist.created|timesince }} ago</span>
+		</li>
+		{% endfor %}
+		<li style="margin: 10px 0; border: none"><a href="{% url view-artists-user profile.user %}" class="view" title="View all">View All</a></li>
+		{% else %}
+		<p>No artists were added by {{ profile.user }}</p>
+		{% endif %}
+	</ul>
+    </div> <!-- end box -->
+
+    <div class="box">
+    <h3> albums by {{ profile.user }} <span class="orng">{{ profile.albums_for_user.count }}</span><a class="rss" href="{% url user-album-feed profile.user %}" title="{{ profile.user }} artists feed"><img src="/media/img/rss_14.png" alt=""></a> </h3>
+	<ul class="user-albums">
+		{% if albums_for_user %}
+		{% for album in albums_for_user %}
+		<li>
+			<a href="{% url album-detail album.artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> <span class="helptext"> {{ album.created|timesince }} ago</span>
+			<p class="helptext">{{ album.artist }} </p>	
+		</li>
+		{% endfor %}
+		<li style="margin: 10px 0; border: none"><a href="{% url view-albums-user profile.user %}" class="view" title="View all">View All</a></li>
+		{% else %}
+		<p> No albums were added by {{ profile.user }}</p>
+		{% endif %}
+	</ul>
+    </div> <!-- end box -->
+
+    <div class="box">
+    <h3> links by {{ profile.user }} <span class="orng">{{ profile.links_for_user.count }}</span><a class="rss" href="{% url user-link-feed profile.user %}" title="{{ profile.user }} artists feed"><img src="/media/img/rss_14.png" alt=""></a> </h3>
+	<ul class="user-links">
+		{% if links_for_user %}
+		{% for link in links_for_user %}
+		<li>
+
+			<a href="{% url track-link link.hash %}" title="link for {{ link.album }}">{{ link|urlizetrunc:50 }}</a><span class="helptext"> {{ link.created|timesince }} ago</span>
+			<p class="helptext">{{ link.album.artist }} - {{ link.album }}</p>
+		</li>
+		{% endfor %}
+		<li style="margin: 10px 0; border: none"><a href="{% url view-links-user profile.user %}" class="view" title="View all">View All</a></li>
+		{% else %}
+		<p> No links were added by {{ profile.user }} </p>
+		{% endif %}
+	</ul>
+    </div> <!-- end box -->
+
+	</div> <!-- end stats -->
+</section>
+{% endblock %}

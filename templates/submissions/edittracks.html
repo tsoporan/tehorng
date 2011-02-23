@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block page_title %}manage tracks for {{ album.name }}{% endblock %}
+{% block body_class %}managetracks{% endblock %}
+{% block js %}{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist}}">{{ artist }}</a> &raquo;</li>
+	<li><a href="{% url album-detail artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> &raquo;</li>
+    <li>Manage Tracks</li>
+{% endblock %}
+
+{% block header %} Manage tracks for <span class="orng">{{ album }}</span>{% endblock %}
+
+{% block content %}
+<form action="" method="post"> {% csrf_token %}
+    {{ formset.management_form }}
+    {% if formset.non_form_errors %}
+    <ul class="errorlist">
+    {% for error in  formset.non_form_errors %}
+        <li>{{ error }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+	{% for form in formset.forms %}
+    <ul class="edittracklist">
+    {% for field in form %}
+	    <li>
+            {% if not field.is_hidden %}
+            {{ field.label_tag }}
+			{{ field }}
+			{{ field.errors }}
+            {% else %}
+            {{ field }}
+            {% endif %}
+        </li>
+	{% endfor %}
+	</ul>
+	{% endfor %}
+    <div class="inpwrap">
+        <input class="continue" type="submit" value="Save and Add More" name="continue">
+        <input type="submit" value="Save"> or <a href="{% url album-detail artist.slug album.slug %}" title="cancel manage tracks">cancel</a>
+    </div>
+
+</form>
+{% endblock content %}
+
+

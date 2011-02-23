@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block page_title %}Flag this comment{% endblock %}
+
+{% block header %}Flag comment{% endblock %}
+{% block content %}
+  <blockquote>{{ comment|linebreaks }}</blockquote>
+  <form action="." method="post"> {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}" id="next" />{% endif %}
+    <p class="submit">
+    <input type="submit" name="submit" value="Flag" /> or <a href="{{ comment.get_absolute_url }}">cancel</a>
+    </p>
+  </form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load markup %}
+{% block page_title %} {{ flatpage.title|lower }} {% endblock %}
+{% block body_class %}flatpage{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li> {{ flatpage.title }} </li>
+{% endblock %}
+
+{% block header %} {{ flatpage.title }} {% endblock %}
+{% block content %}
+    {{ flatpage.content|safe|textile }}
+{% endblock %}

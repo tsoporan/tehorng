@@ -1,0 +1,10 @@
+Welcome {{ username }}! Thank you for registering on tehorng.com.
+
+You will need to activate your account before you can log in by clicking: http://{{ site }}/accounts/verify/{{ profile.verification_key }}
+
+For privacy reasons your password is not in this email, however, you may
+use the "forgot password" feature on the login page to restore your password at anytime.
+
+If you have any questions you can reach us at staff@tehorng.com.
+
+tehorng staff

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block page_title %} change email {% endblock %}
+{% block body_class %}changeemail{% endblock %}
+
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li><a href="{% url profile %}" title="Profile">Profile</a> &raquo;</li>
+	<li>Change Email</li>
+{% endblock %}
+{% block header %}Change Email{% endblock %}
+{% block content %}
+<form action="" method="post"> {% csrf_token %}
+	{% for field in form %}
+		{{ field.errors }}
+		<p><strong>{{ field.label }}:</strong></p>
+		<p> {{ field }} </p>
+		<p class="helptext">{{ field.help_text }}</p>
+	{% endfor %}
+	<input type="submit" value="change"> or <a href="{% url profile %}" title="cancel">cancel</a>
+</form>
+{% endblock%}
+

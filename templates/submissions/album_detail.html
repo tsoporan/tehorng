@@ -1,0 +1,311 @@
+{% extends 'submissions/artist_detail.html' %}
+{% block page_title %}{{ album.name }}{% endblock %}
+{% block body_class %}album-detail{% endblock %}
+{% block meta_desc %}{{ artist.name }} - {{ album.name }} on tehorng{% endblock %}
+{% block meta_keyw %}{{ artist.name }},{{ album.name }},artist,album,{{ block.super }}{% endblock %}
+
+{% block js %}
+	{{ block.super }}
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'6aa5e47b-c23b-42c1-b434-2314b0549435'});</script>
+{% endblock %}
+
+{% load pagination_tags %}
+{% load submission_tags %}
+{% load thumbnail %}
+{% load tagging_tags %}
+{% load gravatar %}
+{% load comments %}
+{% load markup %}
+{% load smiley_tags %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist }}</a>  &raquo;</li>
+	<li> {{ album }} </li>
+{% endblock %}
+
+{% block content %}
+<header>
+<h2> {{ artist.name }} {% if artist.is_touring %} <a href="http://www.last.fm/music/{{ artist.name }}/+events" class="touring">ON TOUR</a> {% endif %}</h2>
+<div class="social-buttons">
+<span class="st_twitter"></span>
+<span class="st_facebook"></span>
+<span class="st_ybuzz"></span>
+<span class="st_gbuzz"></span>
+<span class="st_email"></span><span class="st_sharethis"></span>
+</div>
+<span class="management">
+    <a href="{% url artist-detail artist.slug %}" title="back to {{ artist }}">back to {{ artist }}</a>
+</span>
+</header> 
+<hr>
+
+{% if artist.is_valid and artist.is_public %}
+<aside id="sidebar">
+{% if artist.image %}
+ <a href="{% url artist-detail artist.slug %}" title="{{ artist }}">
+ {% thumbnail artist.image "250x250" crop="center" as im %}
+    <img class="artist-img" src="{{ im.url }}" alt="{{ artist.slug }} image" height="{{ im.height }}" width="{{ im.width }}">
+  {% endthumbnail %}
+ </a>
+{% else %}
+    <a href="{% url addartwork-artist artist.slug %}" title="add {{ artist }} artwork" class="addartwork">+ add artwork</a>
+	<a href="{% url artist-detail artist.slug %}" title="{{ artist}}">
+    {% thumbnail "img/noimgartist.jpg" "250x250" crop="center" as im %}
+    <img src="{{ im.url }}" alt="no image" height="{{ im.height }}" width="{{ im.width }}">
+    {% endthumbnail %}
+    </a>
+
+{% endif %}
+<h3> Artist Info. </h3>
+	<p><strong>Formed</strong>: {% if artist.formed %} {{ artist.formed }} {% else %} n/a {% endif %} </p>
+	<p><strong>Origin</strong>: {% if artist.origin %} {{ artist.origin }} {% else %} n/a {% endif %} </p>
+	<p><strong>Members</strong>: {% if artist.members %} {{ artist.members }} {% else %} n/a {% endif %} </p>
+	<p><strong>Albums</strong>: <a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist.albums.count }}</a></p>
+	{% if artist.uploader %}
+  <p><strong>Uploader</strong>: <a href="{% url profile-user artist.uploader %}" title="{{ artist.uploader }} profile.">{{ artist.uploader }}</a></p>
+	{% else %}
+  <p><strong>Uploader</strong>: <a href="{% url profile-user "tehorng" %}" title="tehorng profile">tehorng</a></p>
+	{% endif %}
+    <p><strong>Created</strong>: {{ artist.created|date:"F j Y P" }}</p>
+    <p><strong>Last Edited By</strong>: {% if artist.last_edit %} <a href="{% url profile-user artist.last_edit %}" title="{{ artist.last_edit }} profile">{{ artist.last_edit }}</a> {% else %} N/A {% endif %} <span class="helptext">{{ artist.modified|timesince }} ago</span></p>
+
+
+<h3> Biography </h3>
+{% if artist.biography %}
+	<p class="bio">{{ artist.biography|truncatewords_html:"100"|striptags }}</p>
+{% else %}
+	<p> No artist biography set. </p>
+{% endif %}
+<h3> Tags </h3>
+{% if artist.tags %}
+<ul class="tag-list">
+{% tags_for_object artist as tags %} 
+{% for tag in tags %}
+		<li><a href="{% url tag-detail 'artists' tag.id %}" rel="tag" title="{{tag }}">{{ tag }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+	<p> No tags set. </p>
+{% endif %}
+<h3> Support </h3>
+<iframe src="http://rcm.amazon.com/e/cm?t=tehorng0d-20&o=1&p=14&l=st1&mode=digital-music&search={{ album.name }}&fc1=000000&lt1=&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="160" height="600" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
+
+
+</aside> <!-- end sidebar -->
+
+<section id="album-content">
+{% if album and album.is_public %}
+	<div id="album">
+	<header>
+	<h2> {{ album.name|title }} </h2>
+	<span class="management">
+		{% if user.is_staff %}
+			<a href="{% url edit-album artist.slug album.slug %}" title="Edit {{ album.name }}">edit</a><a href="{% url delete-album artist.slug album.slug %}" title="Delete {{ album.name }}">delete</a><a href="{% url report-album artist.slug album.slug %}" title="Report {{ album.name }}">report</a>
+		{% else %}
+			{% if user == album.uploader %}
+				<a href="{% url edit-album artist.slug album.slug %}" title="Edit {{ album.name }}">edit</a><a href="{% url delete-album artist.slug album.slug %}" title="Delete {{ album.name }}">delete</a>
+			{% else %}
+				<a href="{% url report-album artist.slug album.slug %}" title="Report {{ album.name }}">report</a>
+			{% endif %}
+		{% endif %}
+	</span> <!-- end management -->
+	</header>
+	<hr>
+	{% if album.image %}
+		<a href="{% url album-detail artist.slug album.slug %}" title="{{ album }}">
+        {% thumbnail album.image "175x175" crop="center" as im %}
+        <img src="{{ im.url }}" alt="{{ album }} coverart" height="{{ im.height }}" width="{{ im.width }}">
+        {% endthumbnail %}
+        </a>
+	{% else %}
+		<a href="{% url album-detail artist.slug album.slug %}" title="{{ album }}">
+        {% thumbnail "img/noimgalbum.jpg" "175x175" crop="center" as im %}
+        <img src="{{ im.url }}" alt="no image" height="{{ im.height }}" width="{{ im.width }}">
+        </a>
+        {% endthumbnail %}
+	{% endif %}
+	<div class="album-info">
+        {% if not album.image %}
+        <a href="{% url addartwork-album artist.slug album.slug %}" title="add {{ album }} artwork" class="addartworkalbum">+ add artwork</a><br>
+		{% endif %}
+		<strong>Release Date</strong>: {% if  album.release_date %} {{ album.release_date|date:"F j Y" }} {% else %} n/a {% endif %}<br>
+		<strong>Links</strong>: {% if artist.is_dmca %}N/A {% else %}{{ album.links.count }}{% endif %} <br>
+		<strong>Uploader</strong>: {% if album.uploader %} <a href="{% url profile-user album.uploader %}" title="{{ album.uploader }} profile">{{ album.uploader }}</a>{% else %}<a href="{% url profile-user "tehorng" %}" title="tehorng profile">tehorng</a>{% endif %} <br>
+		<strong>Created</strong>: {{ album.created|date:"F j Y P" }}<br>
+		<strong>Modified</strong>: {{ album.modified|date:"F j Y P" }} <br>
+		{% tags_for_object album as albumtags %}
+		<strong>Tags</strong>: 
+		{% if albumtags %}<ul class="tag-list">
+			{% for tag in albumtags %}
+				<li><a href="{% url tag-detail 'albums' tag.id %}" title="" rel="tag">{{ tag }}</a></li> 
+			{% endfor %}
+		</ul><br>
+		{% else %} 
+			No tags for this album.
+		{% endif %}
+	</div>
+	
+	<section id="links">
+
+	<header>
+	<h3> Links </h3>
+    {% if not artist.is_dmca %}<span class="management">
+		<a href="{% url add-link artist.slug album.slug %}" title="add link for {{ album }}">add links</a>
+	</span>
+    {% endif %}
+	</header>
+	<hr>
+
+    {% if artist.is_dmca %}
+        <p><strong> This artist has requested that their music not be shared on tehorng.</strong> </p>
+    {% else %}
+    {% if album.links.all %}
+	<table class="link-table">
+		<tr class="header">
+			<td>URL</td>
+			<td>Type</td>
+			<td>Format</td>
+			<td>Bitrate</td>
+			<td>Uploader</td>
+			<td>Created</td>
+			<td>Actions</td>
+		</tr>
+		{% for link in album.links.all %}
+		<tr>
+			<td><a href="{% url track-link link.hash %}" title="link for {{ album }}">{{ link.url|clean_url }}</a> </td>
+			<td> {{ link.url_type }} </td>
+			<td> {% if link.format %}{{ link.format }}{% else %} n/a {% endif %} </td>
+			<td> {% if link.bitrate %}{{ link.bitrate }}{% else %} n/a {% endif %} </td>
+			<td> <a href="{% url profile-user link.uploader %}" title="{{ link.uploader }} profile">{{ link.uploader }}</a></td>
+			<td> <span class="helptext">{{ link.created|timesince }} ago</span></td>
+            {% if user.is_staff %}
+		    	<td><a class="edit" href="{% url edit-link artist.slug album.slug link.id %}" title="edit link">edit</a><a class="report" href="{% url report-link artist.slug album.slug link.id %}" title="report link">report</a><a class="delete" href="{% url delete-link artist.slug album.slug link.id %}" title="delete link">delete</a>
+                </td>
+            {% else %}
+		    	{% if user == link.uploader %}
+		    	<td>
+		    		<a class="edit" href="{% url edit-link artist.slug album.slug link.id %}" title="edit link">edit</a><a class="delete" href="{% url delete-link artist.slug album.slug link.id %}" title="delete link">delete</a>
+		    	</td>
+		    	{% else %}
+		        	<td><a class="report" href="{% url report-link artist.slug album.slug link.id %}" title="report link">report</a></td>
+		    	{% endif %}
+            {% endif %}
+		</tr>
+		{% endfor %}
+    	</table>
+	{% else %}
+		<p> This album has use <a href="{% url add-link artist.slug album.slug %}"><strong>add links</strong></a> to add more!</p>
+	{% endif %}
+    {% endif %}
+    </section> <!-- end links section -->
+
+    <section id="tracks">
+        <header>
+            <h3> Tracks </h3>
+            <span class="management">
+                <a href="{% url manage-tracks artist.slug album.slug %}" title="manage tracks for {{ album }}">manage tracks</a>
+            </span>
+        </header>
+        <hr>
+        {% if album.tracks.all %}
+        <ul id="track-list"> 
+            <li class="top"><span class="track-number">#</span> <span class="track-title">Title</span> <span class="track-duration">Dur.</span></li>
+        {% for track in album.tracks.all %}
+            <li><span class="track-number">{{ track.track_number }}.</span> <span class="track-title">{{ track.title }}</span> <span class="track-duration">{% if track.duration %} {{ track.duration }} {% else %} n/a {% endif %}</span></li>
+        {% endfor %}
+        </ul>
+        {% else %}
+
+        <p> This album has no tracks yet, use <a href="{% url manage-tracks artist.slug album.slug %}"><strong>manage tracks</strong></a> to add some! </p>
+        {% endif %}
+    </section>
+	
+	<section id="resources">
+	<header>
+		<h3> Resources </h3>
+		<span class="management">
+		<a href="{% url addresource-album artist.slug album.slug %}" title="add resource for {{ album }}">add resource</a>
+	</span>
+	</header>
+	<hr>
+	{% if album.resources.all %}
+	  <ul class="resource-list">
+		{% for resource in album.resources.all %}
+			<li><a href="{{ resource.url }}" title="{{ resource.name }}">{{ resource.name }}</a></li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		<p> This album has <strong> no resources. </strong>	</p>
+	{% endif %}
+	</section><!-- end resources -->
+
+	<section id="comments">
+	<header>
+		<h3> Discuss Album</h3>
+	</header>
+	<hr>
+	{% get_comment_list for album as comment_list %}
+	{% get_comment_form for album as form %}
+	{% if comment_list %}
+	<ul id="comment-list">
+        {% autopaginate comment_list 10 %}
+        {% for comment in comment_list %}
+			<li class="comment" id="c{{ comment.id }}">
+					<div class="comment-info">
+					<a href="http://gravatar.com" title="Gravatar">{% gravatar comment.user 48 %}</a>
+					<strong><a href="{% url profile-user comment.user %}" title="{{ comment.user }} profile">{{ comment.user }}</a></strong> 
+			    	<time>	
+                        {{ comment.submit_date|date:"m/d/Y" }}
+                        <span style="display:block">{{ comment.submit_date|date:"P" }}</span>
+                    </time>                
+                      {% if comment.user.is_staff %}
+                        <span class="staff helptext">{% if comment.user.is_superuser %}Admin{% else %}Staff{% endif %}</span>
+                    {% endif %}
+                    </div>
+					<div class="comment-content">
+					{{ comment.comment|urlize|smileys|textile }}
+					</div>
+					<div class="comment-footer">
+					<a href="{{ comment.get_absolute_url }}"  title="permalink">permalink</a>
+					{% if user == comment.user %}
+						<a href="{% url delete-comment comment.id %}" title="delete comment">delete</a>
+					{% else %}
+						<a href="{% url flag-comment comment.id %}" title="flag comment">flag</a>
+					{% endif %}
+					</div> <!-- end comment footer -->
+			</li> 
+		{% endfor %}
+	</ul><!-- end comment list -->
+    {% paginate %}
+	{% else %}
+		<p> <strong> No comments for this album yet. </strong></p>
+	{% endif %}
+	<form action="{% comment_form_target %}" method="post">{% csrf_token %}
+		{% if user.is_authenticated %}	
+			{{ form.comment }} 
+    	{{ form.content_type }} 
+    	{{ form.object_pk }} 
+    	{{ form.timestamp }} 
+    	{{ form.security_hash }} 
+			<p style="display: none"> {{ form.honeypot }} </p>
+			<p class="helptext">HTML is stripped, but you may use <a href="http://www.textism.com/tools/textile/" title="what is textile">textile</a>. </p>
+			<input type="submit" name="post" value="submit">
+			<input type="hidden" name="next" value="{% url album-detail artist.slug album.slug %}">
+		{% else %}
+			<p> You must <a href="{% url login %}?next={% url album-detail artist.slug album.slug %}#comments">log in</a> to post comments. </p>
+		{% endif %}
+	</form>
+	</section> <!-- end comments -->
+	</div> <!-- end album -->
+	{% endif %}
+
+{% else %}
+    {% if not artist.is_public %} <p><strong>Artist is not public for various reasons. <a href="{% url contact %}" title="Contact us">Contact</a> us to find out more.</strong></p> 
+    {% else %}
+    <p><strong> Artist is pending approval. </strong></p>
+    {% endif %}
+{% endif %}
+</section> <!-- end album content -->
+{% endblock %}

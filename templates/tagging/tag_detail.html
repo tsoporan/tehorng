@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load markup %}
+{% load comments %}
+{% block page_title %}tag {{ tag.name }}{% endblock %}
+{% block body_class %}tag-detail{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	{% if filter %}
+	<li><a href="{% url tag-index %}" title="Tag List">Tag List</a> &raquo;</li>
+	<li><a href="{% url tag-list filter %}" title="{{ filter }}">{{ filter|title }}</a> &raquo;</li>
+	{% else %}
+	<li>Tag List</li>
+	{% endif %}
+	<li>{{ tag.name|title }}</li>
+{% endblock %}
+{% block header %}tagged in {{ tag.name }}{% endblock %}
+{% block content %}
+{% if filter == 'artists'%}
+<ul class="artist-list">
+{% for artist in taggeditems %}
+   {% if artist.object.is_valid  and artist.object.is_public %}
+   <li id="{{ artist.object.id }}">
+	 <a href="{% url artist-detail artist.object.slug %}" title="{{ artist.object.name }}">
+	 {% if artist.object.image %}
+	 		{% thumbnail artist.object.image "100x100" crop="center" as im %}
+            <img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ artist.object.name }} image">
+            {% endthumbnail %}
+	 {% else %}
+            {% thumbnail "img/noimgartist.jpg" "100x100" crop="center" as im %}
+	 		<img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="no artist image">
+            {% endthumbnail %}
+	 {% endif %}
+		<span>{{ artist.object }}</span>
+	 </a>
+   </li>
+   {% endif %}
+{% endfor %}
+</ul>
+{% endif %}
+{% if filter == 'albums' %}
+<ul class="album-list">
+{% for album in taggeditems %}
+   {% if album.object.is_valid  and album.object.is_public %}
+   <li id="{{ album.object.id }}">
+	 <a href="{% url album-detail album.object.artist.slug album.object.slug %}" title="{{ album.object.name }}">
+	 {% if album.object.image %}
+            {% thumbnail album.object.image "100x100" crop="center" as im %}
+	 		<img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="{{ album.object.name }} image">
+            {% endthumbnail %}
+	 {% else %}
+            {% thumbnail "img/noimgalbum.jpg" "100x100" crop="center" as im %}
+	 		<img src="{{ im.url }}" height="{{ im.height }}" width="{{ im.width }}" alt="no album image">
+            {% endthumbnail %}
+	 {% endif %}
+		<span>{{ album.object }}</span>
+	 </a>
+   </li>
+   {% endif %}
+{% endfor %}
+</ul>
+
+{% endif %}
+
+
+{% if filter == 'blogs' %}
+<ul id="blog-entry-list">
+{% for entry in taggeditems %}
+	<li class="entry">
+		<header>
+			<h2><a href="{{ entry.object.get_absolute_url }}" title="read full {{ entry.object.title }}">{{ entry.object.title }}</a></h2>
+        </header>
+		<p><strong class="helptext"><span class="gray">Posted {{ entry.object.created|date:"F j Y" }}</span> by {{ entry.object.author }}</strong></p>
+		<article>{{ entry.object.body|truncatewords_html:"100"|markdown }}</article>
+		<footer>
+		<a href="{{ entry.object.get_absolute_url }}">Read More</a>
+		{% get_comment_count for entry.object as comment_count %}
+		<a href="{{ entry.object.get_absolute_url }}#comments">Comments (<strong>{{ comment_count }}</strong>)</a>
+		</footer>
+	</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block meta_desc %} {% endblock %}
+{% block meta_keyw %} {% endblock %}
+
+{% block page_title %}Results : {{ poll }} {% endblock %}
+{% block body_class %}results{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a>&raquo;</li>
+	<li><a href='{% url poll-index %}' title="Poll index">Polls</a>&raquo;</li>
+	<li><a href="{% url poll-detail poll.id %}" title="{{ poll }}">{{ poll }}</a>&raquo;</li>
+    <li>Results</li>
+{% endblock %}
+
+{% block header %}Results: {{ poll }}{% endblock %}
+
+{% block content %}
+<p>Thank you for taking time to vote. Here are the results: </p>
+<p>Total votes: <strong>{{ total }}</strong> </p>
+<ul id="poll-results">
+    {% for choice in poll.choice_set.all %}
+        <li> {{ choice.choice }} -- <strong class="vote">{{ choice.votes }}</strong> vote{{ choice.votes|pluralize }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

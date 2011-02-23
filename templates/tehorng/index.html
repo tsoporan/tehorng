@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load submission_tags %}
+{% block page_title %}{{ block.super }}{% endblock %}
+{% block body_class %}home{% endblock %}
+{% block js %}
+	{{ block.super }}
+	<script type="text/javascript" src="/media/js/jquery.autocomplete.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function () {
+		$('#id_q').click(function () {
+			$(this).attr({ value: '' });
+		});
+		//$('#id_q').autocomplete('/autocomplete_data/', {
+		//	max: 7 
+		//});
+	});
+	</script>
+    {% if not user.is_authenticated %}
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('div.first-time').fadeIn();
+        $('a.cancel').click(function () {
+            $('div.first-time').fadeOut();
+            return false;
+        });
+    });
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if not user.is_authnticated %}
+<div class="first-time" style="display: none;">Hello! First time here? Get started by reading the <a href="/guide/">Orng Guide</a>! <a class="cancel" href="#">X</a></div>{% endif %}
+
+{% if updates %}
+<ul id="updates">
+{% for update in updates %}
+    <li class="update"><strong>Update:</strong> {{ update.message|urlize }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<form id="search" action="/search/" method="GET">
+	{% for field in form %}
+		{{ field }}
+	{% endfor %}
+	<input type="submit" value="squeeze">
+</form>
+
+
+{% load cache %}
+<div id="content-contain">
+<section id="fresh">
+	<h3>fresh</h3>
+	<ul>
+		<li>
+			<h4> artists <span class="rss"><a href="/feeds/artists/" title="freshest artists rss"><img src="/media/img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
+			<ul class="fresh-artists">
+			{% if latest_artists %}
+			{% for artist in latest_artists %}
+				<li>
+					<a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist.name|truncate_chars:20 }}</a>
+					<span> {{ artist.created|timesince }} <strong>ago</strong> </span>
+				</li>
+			{% endfor %}
+			{% else %}
+				<li> No artists in the database yet. </li>	
+			{% endif %}
+			</ul>
+		</li>
+		<li>
+			<h4> albums <span class="rss"><a href="/feeds/albums/" title="freshest albums rss"><img src="/media/img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
+			<ul class="fresh-albums">
+			{% if latest_albums %}
+			{% for album in latest_albums %}
+				<li>
+					<a href="{% url album-detail album.artist.slug album.slug %}" title="{{ album }}">{{ album.name|truncate_chars:20 }}</a>
+					<span> {{ album.created|timesince }} <strong>ago</strong></span>
+					<span class="who">{{ album.artist }}</span>
+				</li>
+			{% endfor %}
+			{% else %}
+				<li> No albums in the database yet. </li>
+			{% endif %}
+			</ul>
+		</li>
+		<li>
+			<h4> links <span class="rss"><a href="/feeds/links/" title="freshest links rss"><img src="/media/img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
+			<ul class="fresh-links">
+			{% if latest_links %}
+			{% for link in latest_links %}
+				<li>
+					<a href="{% url track-link link.hash %}" title="link for {{ link.album }}">{{ link|clean_url }}</a>
+					<span> {{ link.created|timesince }} <strong>ago</strong></span>
+					<span class="who">{{ link.album.artist }} - {{ link.album.name|truncate_chars:20 }} </span>
+				</li>
+			{% endfor %}
+			{% else %}
+				<li> No links in the database yet.</li>
+			{% endif %}
+			</ul>
+		</li>
+	</ul>
+</section>
+
+<section id="popular">
+	<h3>popular</h3>
+	<ul>
+		<li>
+			<h4> artists </h4>
+			<ul class="popular-artists">
+			{% if popular_artists %}
+            {% cache 3600 popularartists %}
+            {% for artist in popular_artists %}
+                <li>
+					<a href="{% url artist-detail artist.object.slug %}" title="{{ artist.object }}">{{ artist.object }}</a>
+					<span> views <strong>{{ artist.hits }}</strong></span>
+				</li>
+			{% endfor %}
+            {% endcache %}
+			{% else %}
+				<li> No popular artists yet. </li>
+			{% endif %}
+			</ul>
+		</li>
+		<li>
+			<h4> albums </h4>
+			<ul class="popular-albums">
+			{% if popular_albums %} 
+            {% cache 3600 popularalbums %}
+            {% for album in popular_albums %}
+				<li>
+					<a href="{% url album-detail album.object.artist.slug album.object.slug %}" title="{{ album.object }}">{{ album.object.name|truncate_chars:20 }}</a>
+					<span> views <strong>{{ album.hits }}</strong></span>
+					<span class="who">{{ album.object.artist }} </span>
+				</li>
+			{% endfor %}
+            {% endcache %}
+			{% else %}
+				<li> No popular albums yet. </li>	
+			{% endif %}
+			</ul>
+		</li>
+		<li>
+			<h4> links </h4>
+			<ul class="popular-links">
+			{% if popular_links %}
+            {% cache 3600 popularlinks %}
+			{% for link in popular_links %}
+				<li>
+					<a href="{% url track-link link.object.hash %}" title="link for {{ link.object.album }}">{{ link.object|clean_url }}</a>
+					<span> views <strong>{{ link.hits }}</strong></span>
+					<span class="who">{{ link.object.album.artist }} - {{ link.object.album }} </span>
+				</li>
+			{% endfor %}
+            {% endcache %}
+			{% else %}
+				<li> No popular links yet. </li>
+			{% endif %}
+			</ul>
+		</li>
+	</ul>
+</section>
+
+<section id="stats">
+	<h3>stats</h3>
+	<ul>
+		<li>
+			<h4> site </h4>
+            {% cache 3600 sitestats %}
+			<ul class="site-stats">
+				<li>artists <span> <strong>{{ artist_count }}</strong> </span></li>
+				<li>albums <span> <strong>{{ album_count }}</strong> </span> </li>
+				<li>tracks <span>  <strong>{{ track_count }}</strong> </span> </li>
+				<li>tags <span>  <strong>{{ tag_count }}</strong> </span> </li>
+				<li>links <span> <strong>{{ link_count }} </strong></span> </li>
+				<li>users <span> <strong> {{ user_count }} </strong></span> </li>
+			</ul>
+            {% endcache %}
+		</li>
+		<li>
+			<h4> users  </h4>
+			<ul class="user-stats">
+	            {% cache 3600 userstats %}
+				<ul class="contrib-list">
+				<p><strong>top link uploaders</strong></p>
+				{% for user in top_contrib_links %}
+						<li><a href="{% url profile-user user %}" title="{{ user }} profile">{{ user }}</a><span> <strong> {{ user.link__count }} </strong></span></li>
+				{% endfor %}
+				</ul> <!-- end contrib list -->
+				<ul class="contrib-list">
+				<p><strong>top album uploaders</strong></p>
+				{% for user in top_contrib_albums %}
+						<li><a href="{% url profile-user user %}" title="{{ user }} profile">{{ user }}</a><span> <strong> {{ user.album__count }} </strong></span></li>
+				{% endfor %}
+				</ul> <!-- end contrib list -->
+				<ul class="contrib-list">
+				<p><strong>top artist uploaders</strong></p>
+				{% for user in top_contrib_artists %}
+						<li><a href="{% url profile-user user %}" title="{{ user }} profile">{{ user }}</a><span> <strong> {{ user.artist__count }} </strong></span></li>
+				{% endfor %}
+				</ul> <!-- end contrib list -->
+                {% endcache %}
+			</ul>
+		</li>
+	</ul>
+</section>
+</div><!-- end content container -->
+{% endblock %}

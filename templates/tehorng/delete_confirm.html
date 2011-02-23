@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block page_title %}Confirm Delete{% endblock %}
+{% block body_class %}deleteconfirm{% endblock %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist}}">{{ artist }}</a> &raquo;</li>
+	<li>Delete {% if artist %} {{ artist }} {% endif %} {% if album %} {{ album }} {% endif %} {% if link %} {{ link }} {% endif %}</li>
+{% endblock %}
+{% block header %} Delete {% if artist %}{{ artist }}{% endif %} {% if album %}{{ album }}{% endif %} {% if link %}{{ link }}{% endif %}{% endblock %}
+{% block content %}
+<p> Are you sure you want to delete <strong>{% if artist %}{{ artist }}{% endif %} {% if album %}{{ album }}{% endif %} {% if link %}{{ link }}{% endif %}</strong>?</p>
+<form action="" method="POST">{% csrf_token %}
+	<input type="submit" value="Yes" name="yes">
+	<input type="submit" value="No" name="no">
+</form>
+{% endblock %}
+

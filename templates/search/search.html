@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block page_title %}search{% endblock %}
+{% block body_class %}search{% endblock %}
+{% block meta_desc %}search tehorng for music{% endblock %}
+{% block meta_keyw %}search, search tehorng, search artists, search albums, {{ block.super }}{% endblock %}
+{% load thumbnail %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li>Search</li>
+{% endblock %}
+{% block header %} Search {% endblock %}
+{% block content %}
+
+<form id="search" method="GET" action=".">
+	{% for field in form %}
+		{{ field }}
+	{% endfor %}
+	<input type="submit" value="squeeze">
+</form>
+<section id="results">
+	{% if query %}
+			<h3>Results</h3>
+            {% if artists %}
+            <h3 class="result-header">Artists</h3>
+            <ul class="result-list">
+            {% for artist in artists %}
+            {% if artist %}
+            <li>
+                <a href="{% url artist-detail artist.object.slug %}" title="{{ artist.object.name }}">
+                {% if artist.object.image %}
+                    {% thumbnail artist.object.image "100x100" crop="center" as im %}
+                    <img src="{{ im.url }}" alt="{{ artist.object.name }}" height="{{ im.height }}" width="{{ im.width }}">
+                    {% endthumbnail %}
+                {% else %}
+                    {% thumbnail "img/noimgartist.jpg" "100x100" crop="center" as im %}
+                    <img src="{{ im.url }}" alt="{{ artist.object.name }}" height="{{ im.height }}" width="{{ im.width }}">
+                    {% endthumbnail %}
+                {% endif %}
+                <span>{{ artist.object.name }}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if albums %}
+            <h3 class="result-header">Albums</h3>
+            <ul class="result-list">
+            {% for album in albums %} 
+            {% if album %}
+            <li>
+                <a href="{% url album-detail album.object.artist.slug album.object.slug %}" title="{{ album.object.name }}">
+                {% if album.object.image %}
+                    {% thumbnail album.object.image "100x100" crop="center" as im %}
+                    <img src="{{ im.url }}" alt="{{ album.object.name }}" height="{{ im.height }}" width="{{ im.width }}">
+                    {% endthumbnail %}
+                {% else %}
+                    {% thumbnail "img/noimgalbum.jpg" "100x100" crop="center" as im %}
+                    <img src="{{ im.url }}" alt="{{ album.object.name }}" height="{{ im.height }}" width="{{ im.width }}">
+                    {% endthumbnail %}
+                {% endif %}
+                <span>{{ album.object.name }}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if tracks %}
+            <h3 class="result-header">Songs</h3>
+            <ul class="result-list">
+            {% for track in tracks %}
+            {% if track %}
+            <li class="track">
+                    <a href="{% url album-detail track.object.album.artist.slug track.object.album.slug %}" title="{{ track.object.title }}">{{ track.object.album.artist }} - {{ track.object.album }} - {{ track.object.title }}</a>
+                </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+            {% endif %}
+    {% else %}
+		<h3> Results </h3>
+		<p> You can search in: <strong>artists</strong>, <strong>albums</strong>, <strong>songs</strong> and <strong>tags</strong> at this time.</p>
+	{% endif %}
+    {% if query and noresults %}
+        <p> No results were found for your query =(</p>
+    {% endif %}
+</section> <!-- end results -->
+{% endblock %}

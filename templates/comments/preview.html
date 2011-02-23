@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block page_title %}Comment Preview{% endblock %}
+{% load i18n %}
+
+{% block content %}
+  {% load comments %}
+  <form action="{% comment_form_target %}" method="post"> {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+    {% if form.errors %}
+		<p><strong> Please fix the errors below. </strong></p>
+		{% else %}
+    <h1>{% trans "Preview your comment" %}</h1>
+      <blockquote>{{ comment|linebreaks }}</blockquote>
+      <p>
+      {% trans "and" %} <input type="submit" name="submit" class="submit-post" value="{% trans "Post your comment" %}" id="submit" /> {% trans "or make changes" %}:
+      </p>
+    {% endif %}
+    {% for field in form %}
+      {% if field.is_hidden %}
+        {{ field }}
+      {% else %}
+        {% if field.errors %}{{ field.errors }}{% endif %}
+        <p
+          {% if field.errors %} class="error"{% endif %}
+          {% if field.name == "honeypot" or field.name == "name" or field.name == "email" %} style="display:none;"{% endif %}
+          {% ifequal field.name "url" %} style="display:none;"{% endifequal %}>
+          <strong>{{ field.label_tag }}</strong><br> {{ field }}
+        </p>
+      {% endif %}
+    {% endfor %}
+		<p class="helptext">HTML is stripped, but you may use <a href="http://daringfireball.net/projects/markdown/basics" title="what is markdown">markdown</a>. </p>
+    <input type="submit" name="submit" class="submit-post" value="Submit">
+		
+  </form>
+{% endblock %}

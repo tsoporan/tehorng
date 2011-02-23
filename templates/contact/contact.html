@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block page_title %} contact {% endblock %}
+{% block body_class %}contact{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li>Contact Us</li>
+{% endblock %}
+
+{% block header %} Contact Us {% endblock %}
+{% block content %}
+<p> If you have a complaint or just want to say hi, let us know what you think about tehorng below.</p>
+<form action="" method="post"> {% csrf_token %}
+	{% for field in form %}
+	{{ field.errors }} </p>
+	<p> <strong>{{ field.label }}:</strong> </p>
+	<p> {{ field }} </p>
+	<p class="helptext">{{ field.help_text }}</p>
+	{% endfor %}
+	<input type="submit" value="Submit">
+</form>
+{% endblock %}
+

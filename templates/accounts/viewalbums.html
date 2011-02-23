@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block page_title %}viewalbums for {{ profile.user }}{% endblock %}
+{% block body_class %}viewalbums{% endblock %}
+
+{% block breadcrumbs %} 
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li><a href="{% url profile-user profile.user %}" title="{{ profile.user }} profile">{{ profile.user }} Profile</a> &raquo;</li>
+    <li>View Albums </li>
+{% endblock %}
+
+{% block header %} View Albums {% endblock %}
+
+
+{% block content %}
+{% if albums_list %}
+<ul class="user-albums">
+{% for album in albums_list %}
+    <li>
+        <a href="{% url album-detail album.artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> <span class="helptext"> {{ album.created|timesince }} ago</span>
+        <p class="helptext">{{ album.artist }} </p>	
+    </li>
+{% endfor %}
+</ul>
+
+<ul class="pagination">
+{% for p in page_range %}
+    <li><a {% if p == page %}class="current"{% endif %} href="?page={{ p }}" title="">{{ p }}</a>
+{% endfor %}
+</ul>
+
+{% else %}
+<p> You haven't added any albums. =( </p>
+{% endif %}
+{% endblock %}
+

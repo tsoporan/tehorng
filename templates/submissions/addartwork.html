@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block page_title %}add artwork{% endblock %}
+{% block body_class %}addartwork{% endblock %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li><a href="{% url artist-index %}" title="Artist List">Artist List</a> &raquo;</li>
+	<li><a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist }}</a> &raquo;</li>
+	{% if album %}
+	<li><a href="{% url album-detail artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> &raquo;</li>
+    {% endif %}
+    <li>Add Artwork</li>
+{% endblock %}
+{% block header %}{% if album %}Add {{ album }} Artwork {% else %} Add {{ artist }} Artwork {% endif %}{% endblock %}
+
+{% block content %}
+
+<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+    {% for field in form %}
+    {{ field.errors }}   
+    <p><strong>{{ field.label }}</strong></p>
+    <p> {{ field }} </p>
+    <p class="helptext"> {{ field.helptext }}</p>
+    {% endfor %}
+	<input type="submit" value="Submit"> or <a href="{% if album %}{% url album-detail artist.slug album.slug %}{% else %}{% url artist-detail artist.slug %}{% endif %}" title="cancel">cancel</a>
+</form>
+{% endblock %}
+

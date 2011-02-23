@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load comments %}
+{% load markup %}
+{% block page_title %} {{ year }} Entry Archive {% endblock %}
+{% block body_class %}entry-archive{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li><a href="{% url entry-list %}" title="Entry List">Entry List</a> &raquo;</li>
+    <li>{{ year }} Archive</li>
+{% endblock %}
+
+{% block header %} {{ year }} Archive {% endblock %}
+
+{% block content %}
+{% if entries %}
+{% for entry in entries %}
+	<li class="entry">
+		<header>
+			<h2><a href="{{ entry.get_absolute_url }}" title="read full {{ entry.title }}">{{ entry.title }}</a></h2>
+        </header>
+		<p><strong class="helptext"><span class="gray">Posted {{ entry.created|date:"F j Y" }}</span> by {{ entry.author }}</strong></p>
+		<article>{{ entry.body|truncatewords_html:"100"|textile }}</article>
+		<footer>
+		<a href="{{ entry.get_absolute_url }}">Read More</a>
+		{% get_comment_count for entry as comment_count %}
+		<a href="{{ entry.get_absolute_url }}#comments">Comments (<strong>{{ comment_count }}</strong>)</a>
+		</footer>
+	</li>
+{% endfor %}
+</ul>
+{% else %}
+    <p><strong>There are no entries for this year. </strong></p>
+{% endif %}
+
+{% endblock %}

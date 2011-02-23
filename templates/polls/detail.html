@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block meta_desc %} {% endblock %}
+{% block meta_keyw %} {% endblock %}
+
+{% block page_title %}Poll : {{ poll }}{% endblock %}
+{% block body_class %}poll{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a>&raquo;</li>
+	<li><a href='{% url poll-index %}' title="Poll index">Polls</a>&raquo;</li>
+	<li>{{ poll }}</li>
+{% endblock %}
+
+{% block header %}{{ poll }}{% endblock %}
+{% block content %}
+<p> {{ poll.description }} </p>
+
+{% if error %}<p class="r"><strong>{{ error }}</strong></p>{% endif %}
+
+{% if poll.type == 'Vote' %}
+<form id="poll-form" action="/polls/{{ poll.id }}/vote/" method="post"> {% csrf_token %}
+{% for choice in poll.choice_set.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br>
+{% endfor %}
+    <input type="submit" value="Vote"> or <a href="{% url poll-results poll.id %}" title="Poll results">Results</a>
+</form>
+{% endif %}
+
+{% if poll.type == 'Feedback' %}
+{% if form %}
+    <form action="" method="post">{% csrf_token %}
+         {% for field in form %}
+            <p><strong> {{ field.label }}</strong> </p>
+            <p> {{ field }} </p>
+         {% endfor %}
+         <br>
+         <p><input type="submit" value="Submit"></p>
+    </form>
+{% else %}
+    <p>Oops! Something went wrong. </p>
+{% endif %}
+{% endif %}
+{% endblock %}

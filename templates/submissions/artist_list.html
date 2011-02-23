@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block meta_desc %} a display of all the artists on tehorng {% endblock %}
+{% block meta_keyw %} tehorng artists,teh orng artists,{{ block.super }} {% endblock %}
+{% block page_title %}artists{% endblock %}
+{% block body_class %}artist-list{% endblock %}
+{% block js %}
+	{{ block.super }}
+	<script type="text/javascript">
+	$(document).ready(function () {
+		var filter_by = function() {
+			var fby = $(this).attr('id');
+        if (fby != "") {
+				var data = { filter: fby };
+								$('ul.artist-list').empty();
+                $('ul.pagination').remove();
+                $('ul.artist-list').html('<img class="loader" src="/media/img/loader.gif">');
+                $('ul.artist-list').load("/artists/", data);
+		     }
+	  	  return false;
+		}
+	//$('ul.filter-list li a').click(filter_by);
+	});
+</script>
+{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li>Artist List</li>
+{% endblock %}
+{% block header %}Artist List <a class="add" href="{% url add-artist %}" title="add an artist">add artist</a>{% endblock %}
+{% block content %}
+<aside id="sidebar">
+	<h3> filter by </h3>
+	<ul class="filter-list">
+		<li>&raquo; <a {% if not filter %}class="current"{% endif %} href="{% url artist-index %}" id="alpha" title="Artists ordered alphabetically.">Alphabetically</a></li>
+		<li>&raquo; <a {% if filter == 'latest' %}class="current"{% endif %} href="{% url artist-list-filter 'latest' %}" id="latest" title="Artists ordered by latest.">Latest</a> </li>
+		<li>&raquo; <a {% if filter == 'popular' %}class="current"{% endif %} href="{% url artist-list-filter 'popular' %}" id="popular" title="Artists ordered by popularity.">Most Popular </a></li>
+		<li>&raquo; <a {% if filter == 'withalbums' %}class="current"{% endif %} href="{% url artist-list-filter 'withalbums' %}" id="withalbums" title="Artists with albums.">With Albums</a> {% if filter == 'withalbums' %}<span class="helptext">({{ artist_list_count }})</span>{% endif %}</li>
+		<li>&raquo; <a {% if filter == 'noalbums' %}class="current"{% endif %} href="{% url artist-list-filter 'noalbums' %}" id="noalbums" title="Artists with no albums.">No Albums</a> {% if filter == 'noalbums' %} <span class="helptext">({{ artist_list_count }})</span> {% endif %}</li>
+	
+		<li>&raquo; <a {% if filter == 'withlinks' %}class="current"{% endif %} href="{% url artist-list-filter 'withlinks' %}" id="withlinks" title="Artists with albums that have links.">With Links</a> {% if filter == 'withlinks' %}<span class="helptext">({{ artist_list_count }})</span>{% endif %}</li>
+    
+		<li>&raquo; <a {% if filter == 'nolinks' %}class="current"{% endif %} href="{% url artist-list-filter 'nolinks' %}" id="nolinks" title="Artists with albums which have NO links.">No Links</a> {% if filter == 'nolinks' %}<span class="helptext">({{ artist_list_count }})</span>{% endif %}</li>
+        
+    </ul>
+	<h3> stats </h3>
+	<ul class="filter-list">
+		<li> Valid Artists: <strong> {{ total_artists }} </strong> </li>
+		<li> Pending Artists: <strong> {{ pending_artists }} </strong> </li>
+	    <li> Valid Albums: <strong> {{ total_albums }} </strong> </li>
+        <li> Pending Albums: <strong> {{ pending_albums }} </strong></li>
+    </ul>
+</aside>
+
+
+<section id="artist-content">
+<ul class="alphabet">
+{% for l in alphabet %}
+	{% if not filter %}
+		<li><a {% if l == letter|upper %}class="current"{% endif %} href="{% url artist-list-letter l %}" title="Artists by {{ l }}">{{ l }}</a></li>
+	{% endif %}
+{% endfor %}
+</ul>
+{% load cache %}
+{% if artist_list %}
+<ul class="artist-list">
+{% for artist in artist_list %}
+    {% if filter == "popular" %}
+    {# TODO: Clean this up, popular queryset is not the same as the others so we have to do a bit of name mangling to get the same results #}
+    {% if artist.object.is_valid and artist.object.is_public %}
+    <li id="{{ artist.object.id }}">
+	    <a href="{% url artist-detail artist.object.slug %}" title="{{ artist.object.name }}">
+	    {% if artist.object.image %}
+                {% thumbnail artist.object.image "100x100" crop="center" as im  %}
+                <img src="{{ im.url }}" alt="{{ artist.object.name }}" height="{{ im.height }}" width="{{ im.width }}">
+                {% endthumbnail %}
+            {% else %}
+                {% thumbnail "img/noimgartist.jpg" "100x100" crop="center" as im %}
+                <img src="{{ im.url }}" alt="{{ artist.object.name }}" height="{{ im.height }}" width="{{ im.width }}">
+                {% endthumbnail %}
+        {% endif %}
+		<span>{{ artist.object }}</span>
+        </a>
+    </li>
+    {% endif %}
+    {% endif %}
+    {% if artist.is_valid and artist.is_public %}
+    <li id="{{ artist.id }}">
+	 <a href="{% url artist-detail artist.slug %}" title="{{ artist.name }}">
+	 {% if artist.image %}
+            {% thumbnail artist.image "100x100" crop="center" as im  %}
+            <img src="{{ im.url }}" alt="{{ artist.name }}" height="{{ im.height }}" width="{{ im.width }}">
+            {% endthumbnail %}
+        {% else %}
+            {% thumbnail "img/noimgartist.jpg" "100x100" crop="center" as im %}
+            <img src="{{ im.url }}" alt="{{ artist.name }}" height="{{ im.height }}" width="{{ im.width }}">
+            {% endthumbnail %}
+    {% endif %}
+	<span>{{ artist }}</span>
+	 </a>
+    </li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+<ul class="pagination">
+{% for p in page_range %}
+	{% if letter or filter %}
+		{% if letter %}
+			<li><a {% if p == page %}class="current"{% endif %} href="/artists/letter/{{ letter }}/?page={{ p }}">{{ p }}</a></li>
+		{% endif %}
+		{% if filter %}
+			<li><a {% if p == page %}class="current"{% endif %} href="/artists/filter/{{ filter }}/?page={{ p }}">{{ p }}</a></li>
+		{% endif %}
+	{% else %}
+	<li><a {% if p == page %}class="current"{% endif %} href="/artists/?page={{ p }}">{{ p }}</a></li>
+	{% endif %}
+{% endfor %}
+</ul>
+{% else %}
+<p> There are <strong>no artists</strong>.</p>
+{% endif %}
+</section> <!-- end artist content -->
+{% endblock %}

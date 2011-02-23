@@ -1,0 +1,12 @@
+xapian-haystack
+python-imaging
+django-haystack
+django-gravatar
+django-extensions
+django-tagging
+sorl-thumbnail
+django-smileys
+south
+django-pagination
+django-sentry
+recaptcha-client

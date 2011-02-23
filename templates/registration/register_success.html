@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block page_title %}registration successful{% endblock %}
+{% block body_class %}register-success{% endblock %} 
+
+{% block header %} Registration Successful! {% endblock %}
+
+{% block content %}
+	<p> Thank you for registering on tehorng, an activation e-mail has been sent to your email address. Follow the instructions to validate your account, then you may <a href="{% url login %}">log in!</a> <strong>If you do not see the email make sure you check your spam folder!</strong></p>
+{% endblock %}

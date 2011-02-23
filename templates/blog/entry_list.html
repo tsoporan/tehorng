@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block page_title %}blog entries {% endblock %}
+{% block body_class %}blog{% endblock %}
+{% load comments %}
+{% load markup %}
+{% load smiley_tags %}
+{% load tagging_tags %}
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li>Entry List</li>
+{% endblock %}
+
+{% block header %} Entry List {% endblock %}
+{% block content %}
+
+<aside id="sidebar">
+	<!--<h3>Search</h3>-->
+
+	<h3>Archives</h3>
+    <strong>Years</strong>
+    <ul class="archive-list">
+    {% for year in years %}
+        <li><a href="{% url year-archive year|date:"Y" %}" title="{{ year|date:"Y" }}">{{ year|date:"Y" }}</a></li>
+    {% endfor %}
+    </ul>
+    <strong>Months</strong>
+    <ul class="archive-list">
+    {% for month in months %}
+        <li><a href="{% url month-archive month|date:"Y" month|date:"n" %}" title="{{ month|date:"F" }}">{{ month|date:"F" }}</a> </li>
+    {% endfor %}
+    </ul>
+
+    <h3> Tags </h3>
+    {% tag_cloud_for_model blog.Entry as tags with steps=20 distribution=log %}
+    {% if tags %}
+    <ul class="entry-tags">
+    {% for tag in tags %}
+        <li><a class="tag-size-{{ tag.font_size}}" href="{% url tag-detail 'blogs' tag.id %}" rel="tag">{{ tag }}</a></li>
+    {% endfor %}
+    </ul>
+    {% else %}
+        <p> There are no tags </p>
+    {% endif %}
+    
+	<h3>Feed <img style="border: none;" src="/media/img/rss_32.png" height="16" width="16"></h3>
+    Want to stay up to date? <a href="/feeds/entries/" title="Latest Entries">Grab the feed</a>.
+</aside>
+
+<section id="blog-content">
+{% if entry_list %}
+<ul id="blog-entry-list">
+{% for entry in entry_list %}
+	<li class="entry">
+		<header>
+			<h2><a href="{{ entry.get_absolute_url }}" title="read full {{ entry.title }}">{{ entry.title }}</a></h2>
+        </header>
+		<p><strong class="helptext"><span class="gray">Posted {{ entry.created|date:"F j Y" }}</span> by {{ entry.author }}</strong></p>
+		<article>{{ entry.body|truncatewords_html:"100"|urlize|smileys|textile }}</article>
+		<footer>
+        {% if entry.tags %}
+        {% tags_for_object entry as tags %}
+        <ul class="entry-tags">
+		    <li><strong>tags:</strong></li>
+            {% for tag in tags  %} 
+            <li><a href="{% url tag-detail 'blogs' tag.id %}" title="{{ tag }} " rel="tag">{{ tag  }}</a></li>
+            {% endfor %}
+		</ul>
+        {% endif %}
+		<a href="{{ entry.get_absolute_url }}">Read More</a>
+		{% get_comment_count for entry as comment_count %}
+		<a href="{{ entry.get_absolute_url }}#comments">Comments (<strong>{{ comment_count }}</strong>)</a>
+		</footer>
+	</li>
+{% endfor %}
+</ul>
+{% else %}
+<p> There are <strong> no entires.</strong> </p>
+{% endif %}
+</section> <!-- end blog content -->
+{% endblock %}
