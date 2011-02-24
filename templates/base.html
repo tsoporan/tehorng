@@ -28,6 +28,8 @@
     {% block js %}
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+ 
+    <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
     <!--[if IE]>
     <script type="text/javascript" src="/media/js/html5.js"></script>
     <![endif]-->
@@ -44,6 +46,7 @@
             <li><a href="{% url tag-index %}" title="tags">tags</a></li>
             <li><a href="{% url entry-list %}" title="weblog">blog</a></li>
         </ul>
+        <fb:like ref="main" style="position: absolute; left: 0; top:-45px" href="http://tehorng.com" layout="button_count" show_faces="true" width="451" font="verdana"></fb:like>
         <ul id="account-nav">
         {% if user.is_authenticated %}
             <li><a href="{% url inbox %}" title="{{ user }} inbox.">inbox (<span class="inbox">{{ user_messages.count }}</span>)</a> |</li>
