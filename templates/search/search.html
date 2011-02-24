@@ -47,6 +47,8 @@
     {% endfor %}
     </ul>
     {% paginate %}
+    {% else %}
+        <p><strong> No results were found{% if query %}for {{ query }}{% endif %}.</strong></p>
     {% endif %}
 </section> <!-- end results -->
 {% endblock %}
