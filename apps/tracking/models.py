@@ -9,6 +9,10 @@ class TrackedManager(models.Manager):
         hits = self.get_query_set().values('hits')
         return sum([obj['hits'] for obj in hits])
 
+class HitManager(models.Manager):
+    def hits_for_object(self, instance):
+        ctype = ContentType.objects.get_for_model(instance)
+        return self.filter(content_type=ctype, object_id=instance.id).count()
 
 class Hit(models.Model):
     user = models.ForeignKey(User, null=True)
@@ -16,6 +20,7 @@ class Hit(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
+    objects = HitManager()
 
     def __unicode__(self):
         return u"%s hit on %s:%s" % (self.user or "Anonymous", self.content_type, self.content_object)
@@ -34,7 +39,6 @@ class TrackedObject(models.Model):
     hits = models.PositiveIntegerField(default=1)
     created = models.DateTimeField(default=datetime.datetime.now)
     modified = models.DateTimeField(auto_now_add=True)
-
     class Meta:
         ordering = ('-hits',)
         get_latest_by = "created"
