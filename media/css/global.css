@@ -1638,4 +1638,6 @@ span.reason {
 span.object {
     background: grey;
 }
-
+#recaptcha_area {
+    margin: 20px 140px 0;
+}
