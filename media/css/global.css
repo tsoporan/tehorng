@@ -1672,3 +1672,72 @@ p.views {
 p.views span {
     font-size: 140%;
 }
+p.about-issue {
+    margin-bottom: 20px;
+}
+a.create-issue {
+    background: #333;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px;
+}
+#issue-create-form label, #issue-edit-form label {
+    font-weight: bold;
+    display: block;
+}
+#issue-edit-form {
+    padding: 20px;
+    background: #eee;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+#issue-table {
+    width: 100%;
+    margin-top: 10px;
+}
+#issue-table tr.header {
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    padding-bottom: 5px;
+
+}
+#issue-table tr.header td {
+    padding: 5px;
+    font-size: 130%;
+    color: #444;
+}
+#issue-table tr td {
+    padding: 15px 5px;
+    font-weight: bold;
+}
+#issue-table tr.odd {
+    background: #f9f9f9;
+}
+#issue-table tr.even {
+    background: #eee;
+}
+
+.vhigh { color: #db0f0f}
+.high { color: #f54545;}
+.mod { color: #f56a14;}
+.low { color: #a2b524;}
+.vlow { color: #c4d93d;}
+
+section#issue h3 {
+    margin: 15px 0 0;
+    border-bottom: 1px solid #eee;
+}
+#issue-details {
+    margin: 20px;
+}
+#issue p.desc {
+    margin: 20px;
+}
+#issue #comment-list {
+    margin: 20px;
+}

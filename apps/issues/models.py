@@ -31,3 +31,16 @@ class Issue(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def html_class(self):
+        if self.priority == 1:
+            return "vhigh"
+        elif self.priority == 2:
+            return "high"
+        elif self.priority == 3:
+            return "mod"
+        elif self.priority == 4:
+            return "low"
+        else:
+            return "vlow"
+

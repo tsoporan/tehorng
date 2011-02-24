@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
@@ -38,7 +38,7 @@ def issue_detail(request, issue_id, template='issues/issue_detail.html'):
 
     context = {'issue': issue}
 
-    if request.user.is_staff():
+    if request.user.is_superuser:
         if request.method == 'POST' and request.POST:
             form = IssueEditForm(request.POST, instance=issue)
             if form.is_valid():

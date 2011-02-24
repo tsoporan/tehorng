@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block page_title %} Issue List {% endblock %}
+{% block body_class %}issue-list{% endblock %}
+
+{% block header %} Issues {% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li> Issue List </li>
+{% endblock %}
+	
+{% block content %}
+
+<p class="about-issue">This is a mini issue tracker for tehorng. If you have a feature request or an issue with tehorng you can submit it here and one of the admins will be able to review it. You can also keep track of what is being worked on and what issues or features are going to be completed first.</p>
+
+<a class="create-issue" href="{% url create-issue %}" title="Create Issue">New Issue</a>
+
+<table id="issue-table">
+    <tr class="header">
+        <td>#</td>
+        <td>Title</td>
+        <td>Submitter</td>
+        <td>Status</td>
+        <td>Priority</td>
+        <td>Created</td>
+    </tr>
+
+    {% for issue in issues %}
+    <tr class="{% cycle odd,even %}">
+        <td>{{ issue.id }}</td>
+        <td><a href="{% url issue-detail issue.id %}" title="{{ issue.title }}">{{ issue.title }}</a> </td>
+        <td>{{ issue.submitter }} </td>
+        <td>{{ issue.get_status_display }} </td>
+        <td class="{{ issue.html_class }}">{{ issue.get_priority_display }} </td>
+        <td>{{ issue.pub_date|timesince }} ago </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock content %}

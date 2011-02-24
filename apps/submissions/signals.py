@@ -42,4 +42,4 @@ def commentOnObject(sender, comment, request, **kwargs):
         )
         message.save(email=False) #don't email we email above
 
-comment_was_posted.connect(commentOnObject)
+#comment_was_posted.connect(commentOnObject)

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block page_title %} Issue {{ issue.id }} {% endblock %}
+{% block body_class %}issue-detail{% endblock %}
+{% load comments %}
+{% load pagination_tags %}
+{% load markup %}
+{% load gravatar %}
+{% load tagging_tags %}
+{% load smiley_tags %}
+
+{% block header %} Issue: {{ issue.title }}{% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li><a href="{% url issues-list %}" title="Issues List">Issue List</a> &raquo;</li>
+    <li> Issue: {{ issue.id }} </li>
+{% endblock %}
+	
+{% block content %}
+
+{% if form and user.is_superuser %}
+<form id="issue-edit-form" action="" method="POST">{% csrf_token %}
+    {{ form.as_p }}
+    <input style="margin-top: 10px;" type="submit" value="Save">
+</form>
+{% endif %}
+
+<section id="issue">
+
+    <ul id="issue-details">
+        <li>Issue #: <strong>{{ issue.id }}</strong> </li>
+        <li>Created: {{ issue.pub_date }}</li>
+        <li>Last Modified: {{ issue.mod_date }}</li>
+        <li>Status: <strong>{{ issue.get_status_display }}</strong> </li>
+        <li>Priority: <span class="{{ issue.html_class }}"><strong>{{ issue.get_priority_display }}</strong></span> </li>
+        <li>Submitter: <strong>{{ issue.submitter }}</strong></li>
+    </ul>
+
+    <h3> Description: </h3>
+    <p class="desc"><strong>{{ issue.description }}<strong></p>
+
+    
+    <h3> Comments </h3> 
+
+    {% get_comment_list for issue as comment_list %}
+    {% if comment_list %} 
+    <ul id="comment-list">
+    {% autopaginate comment_list 10 %}
+    {% for comment in comment_list %}
+      <li class="comment" id="c{{ comment.id }}">
+              <div class="comment-info">
+              <a href="http://gravatar.com" title="Gravatar">{% gravatar comment.user 48 %}</a>
+              <strong><a href="{% url profile-user comment.user %}" title="{{ comment.user }} profile">{{ comment.user }}</a></strong> 
+              <time>	
+                {{ comment.submit_date|date:"m/d/Y" }}
+                <span style="display:block">{{ comment.submit_date|date:"P" }}</span>
+              </time>                
+              {% if comment.user.is_staff %}
+                <span class="staff helptext">{% if comment.user.is_superuser %}Admin{% else %}Staff{% endif %}</span>
+              {% endif %}
+              </div>
+              <div class="comment-content">
+              {{ comment.comment|urlize|smileys|textile }}
+              </div>
+              <div class="comment-footer">
+              <a href="{{ comment.get_absolute_url }}"  title="permalink">permalink</a>
+              {% if user == comment.user %}
+                  <a href="{% url delete-comment comment.id %}" title="delete comment">delete</a>
+              {% else %}
+                  <a href="{% url flag-comment comment.id %}" title="flag comment">flag</a>
+              {% endif %}
+              </div> <!-- end comment footer -->
+      </li> 
+  {% endfor %}
+    </ul><!-- end comment list -->
+    {% paginate %}
+
+    {% else %}
+        <p class="desc"><strong>No comments on this issue yet, be the first!</strong></p>
+    {% endif %} 
+
+{% get_comment_form for issue as cform %}
+<form action="{% comment_form_target %}" method="post">{% csrf_token %}
+    {% if user.is_authenticated %}	
+        {{ cform.comment }} 
+        {{ cform.content_type }} 
+        {{ cform.object_pk }} 
+        {{ cform.timestamp }} 
+        {{ cform.security_hash }} 
+        <p style="display: none"> {{ cform.honeypot }} </p>
+        <p class="helptext">HTML is stripped, but you may use <a href="http://www.textism.com/tools/textile/" title="what is textile">textile</a>. </p>
+        <input type="submit" name="post" value="Submit">
+        <input type="hidden" name="next" value="{% url issue-detail issue.id  %}">
+    {% else %}
+        <p class="desc"> You must <a href="{% url login %}?next={% url issue-detail issue.id %}#comments">log in</a> to post comments. </p>
+    {% endif %}
+</form>
+</section> <!-- end issue -->
+
+{% endblock content %}

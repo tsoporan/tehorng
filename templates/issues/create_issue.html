@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block page_title %} Create Issue {% endblock %}
+{% block body_class %}create-issue{% endblock %}
+
+{% block header %} Create Issue {% endblock %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+	<li><a href="{% url issues-list %}" title="Issues List">Issue List</a> &raquo;</li>
+    <li> Create Issue </li>
+{% endblock %}
+	
+{% block content %}
+
+<form id="issue-create-form" action="" method="POST">{% csrf_token %}
+    {{ form.as_p }}
+    <input style="margin-top: 10px;" type="submit" value="Create">
+</form>
+
+
+{% endblock content %}
