@@ -1665,3 +1665,10 @@ li.result img {
     float: left;
     margin: 0 10px;
 }
+p.views {
+    font-size: 130%;
+    font-weight: bold;
+}
+p.views span {
+    font-size: 140%;
+}

@@ -25,6 +25,7 @@ from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from activity.signals import add_object, edit_object, delete_object 
 from tracking.signals import hit
+from tracking.models import Hit
 import inspect
 
 ALPHABET = ['0-9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
@@ -130,6 +131,9 @@ def artist_detail(request, artist):
         queryset = Artist.objects.all(),
         slug = artist,
         template_object_name = "artist",
+        extra_context = {
+            'hits': Hit.objects.hits_for_object(artist_obj),    
+        }
     )
 
 @login_required

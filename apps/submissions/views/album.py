@@ -20,6 +20,7 @@ from django.db.utils import IntegrityError
 from django.views.decorators.cache import cache_page
 from activity.signals import add_object, edit_object, delete_object
 from tracking.signals import hit
+from tracking.models import Hit
 import inspect
 
 def album_detail(request, artist, album):
@@ -34,7 +35,10 @@ def album_detail(request, artist, album):
         queryset = Album.objects.all(),
         object_id = album_obj.id,
         template_object_name = "album",
-        extra_context = { 'artist': artist },
+        extra_context = {
+            'artist': artist,
+            'hits': Hit.objects.hits_for_object(artist),
+         },
     )
 
 @login_required
