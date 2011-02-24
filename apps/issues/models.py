@@ -2,11 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
-
 STATUS_CHOICES = (
     (1, 'Open'),
     (2, 'Working'),
     (3, 'Closed'),
+    (4, 'Pending'),
 )
 
 PRIORITY_CHOICES = (
@@ -17,13 +17,13 @@ PRIORITY_CHOICES = (
     (5, 'Very Low')
 )
 
-class Ticket(models.Model):
+class Issue(models.Model):
     title = models.CharField(max_length=100)
     pub_date = models.DateTimeField(auto_now_add=True)
     mod_date = models.DateTimeField(auto_now=True)
     submitter = models.ForeignKey(User)
     description = models.TextField(blank=True)
-    status = models.IntegerField(default=1, choices=STATUS_CHOICES)
+    status = models.IntegerField(default=4, choices=STATUS_CHOICES)
     priority = models.IntegerField(default=3, choices=PRIORITY_CHOICES)
 
     class Meta:
