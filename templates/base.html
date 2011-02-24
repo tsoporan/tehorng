@@ -47,6 +47,9 @@
             <li><a href="{% url entry-list %}" title="weblog">blog</a></li>
         </ul>
         <fb:like ref="main" style="position: absolute; left: 0; top:-45px" href="http://tehorng.com" layout="button_count" show_faces="true" width="451" font="verdana"></fb:like>
+        
+      <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://tehorng.com" data-text="tehorng" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script> 
+
         <ul id="account-nav">
         {% if user.is_authenticated %}
             <li><a href="{% url inbox %}" title="{{ user }} inbox.">inbox (<span class="inbox">{{ user_messages.count }}</span>)</a> |</li>

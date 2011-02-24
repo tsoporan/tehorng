@@ -23,6 +23,11 @@ a:hover { color: #333; }
 .e { font-style: oblique;}
 .g { color: green }
 .r { color: red }
+.twitter-share-button {
+    position: absolute;
+    left: 100px;
+    top: -45px;
+}
 span.username, span.inbox { font-size: 85%; }
 span.staff, span.admin, span.user {
     display: block;
