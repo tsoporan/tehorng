@@ -24,18 +24,9 @@ class Action(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    
-    content_object_hard = models.CharField(max_length=255, blank=True)
 
     def human_msg(self):
-        content_object = self.content_object if self.content_object else self.content_object_hard + " (Deleted)"
-        return mark_safe(u"%s %s %s:%s" % (self.user.username, self.get_action_display(), self.content_type.name, content_object))
+        return mark_safe(u"%s %s %s:%s" % (self.user.username, self.get_action_display(), self.content_type.name, self.content_object))
     
     def __unicode__(self):
-        content_object = self.content_object if self.content_object else self.content_object_hard + " (Deleted)"
-        return u"%s for %s on %s" % (self.get_action_display(), self.user.username, content_object)
-
-    def save(self, *args, **kwargs):
-        if not self.content_object_hard and self.content_object:
-            self.content_object_hard = self.content_object
-        super(Action, self).save(*args, **kwargs)
+        return u"%s for %s on %s" % (self.get_action_display(), self.user.username, self.content_object)

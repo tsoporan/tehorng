@@ -35,18 +35,6 @@
     
     <div class="stats-contain">
 	
-    {% if reports %}
-    <div class="reports-contain">
-        <h3>You have <strong class="r">{{ reports.count }}</strong> reports!</h3>
-        <ul class="reports-list">
-        {% for report in reports %}
-            <li><span class="type">{{ report.ctype }}</span><span class="object">{{ report.object }}</span><span class="reason">{{ report.reason }}</span></li> 
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-
     <div class="box">
     <h3> artists by you <span class="orng">{{ profile.artists_for_user.count }}</span><a class="rss" href="{% url user-artist-feed user %}" title="{{ user }} artists feed"><img src="/media/img/rss_14.png" alt=""></a> </h3>
 	<ul>
