@@ -29,7 +29,7 @@
     <tr class="{% cycle odd,even %}">
         <td>{{ issue.id }}</td>
         <td><a href="{% url issue-detail issue.id %}" title="{{ issue.title }}">{{ issue.title }}</a> </td>
-        <td>{{ issue.submitter }} </td>
+        <td><a href="{% url profile-user issue.submitter.username %}" title="{{ issue.submiter }} profile">{{ issue.submitter }}</a></td>
         <td>{{ issue.get_status_display }} </td>
         <td class="{{ issue.html_class }}">{{ issue.get_priority_display }} </td>
         <td>{{ issue.pub_date|timesince }} ago </td>

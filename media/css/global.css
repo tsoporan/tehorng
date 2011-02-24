@@ -1738,6 +1738,10 @@ section#issue h3 {
 #issue p.desc {
     margin: 20px;
 }
-#issue #comment-list {
+#issue #comment-list, #issue-comment-form {
     margin: 20px;
+}
+#issue-comment-form {
+    border-top: 2px solid #ddd;
+    padding-top: 20px;
 }

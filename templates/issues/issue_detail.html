@@ -29,11 +29,11 @@
 
     <ul id="issue-details">
         <li>Issue #: <strong>{{ issue.id }}</strong> </li>
-        <li>Created: {{ issue.pub_date }}</li>
-        <li>Last Modified: {{ issue.mod_date }}</li>
+        <li>Created: <strong>{{ issue.pub_date }}</strong></li>
+        <li>Last Modified: <strong>{{ issue.mod_date|timesince }} ago</strong></li>
         <li>Status: <strong>{{ issue.get_status_display }}</strong> </li>
         <li>Priority: <span class="{{ issue.html_class }}"><strong>{{ issue.get_priority_display }}</strong></span> </li>
-        <li>Submitter: <strong>{{ issue.submitter }}</strong></li>
+        <li>Submitter: <strong><a href="{% url profile-user issue.submitter.username %}" title="{{ issue.submiter }} profile ">{{ issue.submitter }}</a></strong></li>
     </ul>
 
     <h3> Description: </h3>
@@ -63,7 +63,7 @@
               {{ comment.comment|urlize|smileys|textile }}
               </div>
               <div class="comment-footer">
-              <a href="{{ comment.get_absolute_url }}"  title="permalink">permalink</a>
+              <a href="{% get_comment_permalink comment %}" title="permalink">permalink for #{{ forloop.counter }}</a>
               {% if user == comment.user %}
                   <a href="{% url delete-comment comment.id %}" title="delete comment">delete</a>
               {% else %}
@@ -80,7 +80,7 @@
     {% endif %} 
 
 {% get_comment_form for issue as cform %}
-<form action="{% comment_form_target %}" method="post">{% csrf_token %}
+<form id="issue-comment-form" action="{% comment_form_target %}" method="post">{% csrf_token %}
     {% if user.is_authenticated %}	
         {{ cform.comment }} 
         {{ cform.content_type }} 
@@ -92,7 +92,7 @@
         <input type="submit" name="post" value="Submit">
         <input type="hidden" name="next" value="{% url issue-detail issue.id  %}">
     {% else %}
-        <p class="desc"> You must <a href="{% url login %}?next={% url issue-detail issue.id %}#comments">log in</a> to post comments. </p>
+        <p class="desc"> You must <a href="{% url login %}?next={% url issue-detail issue.id %}#issue-comment-form">log in</a> to post comments. </p>
     {% endif %}
 </form>
 </section> <!-- end issue -->
