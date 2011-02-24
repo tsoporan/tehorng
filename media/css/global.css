@@ -1641,3 +1641,27 @@ span.object {
 #recaptcha_area {
     margin: 20px 140px 0;
 }
+
+span.query {
+    color: orange;
+}
+li.result {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    margin: 5px 0;
+}
+li.result:hover {
+}
+li.result h4 span {
+    float: right;
+    background: #333;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    color: orange;
+    padding: 3px;
+}
+li.result img {
+    float: left;
+    margin: 0 10px;
+}

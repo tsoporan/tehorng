@@ -51,7 +51,7 @@ urlpatterns = patterns('',
     (r'^accounts/', include('accounts.urls')),
     
     #search
-    url(r'^search/$', OrngSearchView(form_class=SearchForm), name="search"),
+    url(r'^search/', include('search.urls'), name="search"),
 
     #comments - handle deleteing/flagging in submissiosn
     url(r'^comments/flagcomment/(?P<id>\d+)/$', 'submissions.comments.flag_comment', name="flag-comment"), 

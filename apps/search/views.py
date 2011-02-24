@@ -1,14 +1,27 @@
 from haystack.views import SearchView
 from haystack.forms import SearchForm
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from submissions.models.artist import Artist
 from submissions.models.album import Album
 from submissions.models.track import Track
-
+from haystack.query import SearchQuerySet
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 20)
+
+def search(request, template="search/search.html"):
+    query = request.GET.get('q', '')
+    if query:
+        results = SearchQuerySet().filter(content=query)
+    else:
+        results = None
+    return render_to_response(template, {
+        'query': query,
+        'results': results,
+        'form' : SearchForm(initial={'q': "artist, album, or song"}),
+    }, context_instance=RequestContext(request))
 
 class OrngSearchView(SearchView):
     def __name__(self):
