@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User, Group
 from messaging.models import UserMessage
 from django.core.mail import send_mail
-from tracking.views import track_album
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from submissions.models.artist import Artist
@@ -20,6 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
 from django.views.decorators.cache import cache_page
 from activity.signals import add_object, edit_object, delete_object
+from tracking.signals import hit
 import inspect
 
 def album_detail(request, artist, album):
@@ -28,7 +28,7 @@ def album_detail(request, artist, album):
     """
     artist = get_object_or_404(Artist, slug__iexact=artist)
     album_obj = get_object_or_404(Album, artist=artist, slug=album)
-    track_album(request, album_obj) #track album 
+    hit.send(sender='album_detail', object=album_obj, request=request)
     return list_detail.object_detail(
         request,
         queryset = Album.objects.all(),

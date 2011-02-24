@@ -11,14 +11,14 @@ class TrackedManager(models.Manager):
 
 
 class Hit(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
 
     def __unicode__(self):
-        return u"%s hit on %s" % (self.user.username, self.content_object)
+        return u"%s hit on %s:%s" % (self.user or "Anonymous", self.content_type, self.content_object)
 
 class TrackedObject(models.Model):
     """

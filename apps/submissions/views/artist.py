@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User, Group
 from messaging.models import UserMessage
 from django.core.mail import send_mail
-from tracking.views import track_artist
 from django.contrib import messages
 from tracking.models import TrackedArtist
 from django.core.paginator import Paginator, InvalidPage
@@ -25,6 +24,7 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from activity.signals import add_object, edit_object, delete_object 
+from tracking.signals import hit
 import inspect
 
 ALPHABET = ['0-9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
@@ -124,7 +124,7 @@ def artist_detail(request, artist):
     A detailed view of an artist. 
     """
     artist_obj = get_object_or_404(Artist, slug=artist)
-    track_artist(request, artist_obj) #track artist hit
+    hit.send(sender='artist_detail', object=artist_obj, request=request)
     return list_detail.object_detail(
         request,
         queryset = Artist.objects.all(),

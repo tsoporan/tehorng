@@ -13,3 +13,4 @@ Just some ideas of what should be added/fixed to tehorng (in no particular order
 - a robust automated link checking solution (perhaps only allow certain services, but do them well)
 - add documentation/guides/instructions, generally just more verbosity in terms of what things are and do (needed badly)
 - __Request__ functionality
+- issues tracker, and simple feedback form, a successor to this TODO
