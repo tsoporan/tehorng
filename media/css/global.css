@@ -1675,6 +1675,9 @@ p.views span {
 }
 p.about-issue {
     margin-bottom: 20px;
+    background: #fffca8;
+    padding: 3px;
+    font-size: 90%;
 }
 a.create-issue {
     background: #333;
