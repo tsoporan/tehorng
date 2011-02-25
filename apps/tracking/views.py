@@ -8,6 +8,7 @@ from submissions.models.link import Link
 from datetime import datetime, timedelta
 from django.core import serializers
 from tracking.signals import hit
+from django.template import RequestContext
 
 def track_artist(request, artist_obj):
     """
@@ -51,29 +52,11 @@ def track_album(request, album_obj):
             trk_obj.users.add(request.user)
         trk_obj.save()
 
-
-def track_link(request, object_hash):
+def track_link(request, object_hash, template="submissions/link_frame.html"):
     """Track external links."""
     link = get_object_or_404(Link, hash=object_hash)
-    #ctype = ContentType.objects.get(name__iexact='link')
-    #try to save a tracked object for this link - else - increment counter
-    #try:
-    #   trk_obj = TrackedLink.objects.get(ctype=ctype, object_id=link.id)
-    #   trk_obj.hits += 1 
-    #   trk_obj.save()
-    #except TrackedLink.DoesNotExist:
-    #   trk_obj = TrackedLink(
-    #       ctype = ctype,  
-    #       object_id = link.id,
-    #   )
-    #   if request.user.is_authenticated():
-    #       trk_obj.save()
-    #       trk_obj.users.add(request.user)
-    #   trk_obj.save()
-    #
     hit.send(sender='track_link', object=link, request=request)
-    return HttpResponseRedirect(link.url)
-
+    return render_to_response(template, {'link': link}, context_instance=RequestContext(request))
 
 def popular_artists(request, filter=None):
     if not filter: return Http404("No filter provided.")
