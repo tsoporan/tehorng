@@ -22,6 +22,7 @@ a:hover { color: #333; }
 .b { font-weight: bold; }
 .e { font-style: oblique;}
 .g { color: green }
+.y { color: #f0e441}
 .r { color: red }
 .twitter-share-button {
     position: absolute;
@@ -1677,13 +1678,17 @@ p.about-issue {
 }
 a.create-issue {
     background: #333;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    -moz-border-radius: 3px 3px 0 0;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    border-radius: 3px 3px 0 0;
     color: #fff;
     font-weight: bold;
     text-decoration: none;
     padding: 5px;
+}
+a.create-issue:hover {
+    background: #444;
 }
 #issue-create-form label, #issue-edit-form label {
     font-weight: bold;
@@ -1698,18 +1703,18 @@ a.create-issue {
 }
 #issue-table {
     width: 100%;
-    margin-top: 10px;
+    background: #333;
+    margin-top: 3px;
 }
 #issue-table tr.header {
     border-bottom: 1px solid #eee;
     font-weight: bold;
     padding-bottom: 5px;
-
 }
 #issue-table tr.header td {
     padding: 5px;
-    font-size: 130%;
-    color: #444;
+    font-size: 110%;
+    color: #777;
 }
 #issue-table tr td {
     padding: 15px 5px;
@@ -1720,6 +1725,12 @@ a.create-issue {
 }
 #issue-table tr.even {
     background: #eee;
+}
+#issue-table tr.complete {
+    background: #e5f29f;
+}
+#issue-table tr.reop {
+    background: #fff56e;
 }
 
 .vhigh { color: #db0f0f}

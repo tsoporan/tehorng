@@ -8,7 +8,7 @@ from issues.models import Issue
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Issue
-        fields = ('title', 'description')
+        fields = ('title', 'type', 'description')
 
 
 class IssueEditForm(forms.ModelForm):

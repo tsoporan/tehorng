@@ -8,7 +8,7 @@
 {% load tagging_tags %}
 {% load smiley_tags %}
 
-{% block header %} Issue: {{ issue.title }}{% endblock %}
+{% block header %} Issue: {{ issue.title }} {% if issue.is_complete %}<span class="g">[Complete]</span>{% endif %}{% if issue.is_reopened %}<span class="y">[Reopened]</span>{% endif %}{% endblock %}
 
 {% block breadcrumbs %}
 	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
@@ -29,6 +29,7 @@
 
     <ul id="issue-details">
         <li>Issue #: <strong>{{ issue.id }}</strong> </li>
+        <li>Issue type: <strong>{{ issue.get_type_display }}</strong> </li>
         <li>Created: <strong>{{ issue.pub_date }}</strong></li>
         <li>Last Modified: <strong>{{ issue.mod_date|timesince }} ago</strong></li>
         <li>Status: <strong>{{ issue.get_status_display }}</strong> </li>
@@ -37,7 +38,7 @@
     </ul>
 
     <h3> Description: </h3>
-    <p class="desc"><strong>{{ issue.description }}<strong></p>
+    <p class="desc"><strong>{{ issue.description }}</strong></p>
 
     
     <h3> Comments </h3> 

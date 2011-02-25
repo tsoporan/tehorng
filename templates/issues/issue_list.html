@@ -11,7 +11,7 @@
 	
 {% block content %}
 
-<p class="about-issue">This is a mini issue tracker for tehorng. If you have a feature request or an issue with tehorng you can submit it here and one of the admins will be able to review it. You can also keep track of what is being worked on and what issues or features are going to be completed first.</p>
+<p class="about-issue">This is a mini issue tracker/todo for tehorng. If you have a feature request or an issue with tehorng you can submit it here and one of the admins will be able to review it. You can also keep track of what is being worked on and what issues or features are going to be resolved first. =)</p>
 
 <a class="create-issue" href="{% url create-issue %}" title="Create Issue">New Issue</a>
 
@@ -19,6 +19,7 @@
     <tr class="header">
         <td>#</td>
         <td>Title</td>
+        <td>Type</td>
         <td>Submitter</td>
         <td>Status</td>
         <td>Priority</td>
@@ -26,13 +27,14 @@
     </tr>
 
     {% for issue in issues %}
-    <tr class="{% cycle odd,even %}">
+    <tr class="{% cycle odd,even %}{% if issue.get_status_display == 'Complete' %} complete{% endif %}{% if issue.get_status_display == 'Reopened' %} reop{% endif %}{% if forloop.last %} last{% endif %}">
         <td>{{ issue.id }}</td>
         <td><a href="{% url issue-detail issue.id %}" title="{{ issue.title }}">{{ issue.title }}</a> </td>
+        <td>{{ issue.get_type_display }}</td>
         <td><a href="{% url profile-user issue.submitter.username %}" title="{{ issue.submiter }} profile">{{ issue.submitter }}</a></td>
         <td>{{ issue.get_status_display }} </td>
         <td class="{{ issue.html_class }}">{{ issue.get_priority_display }} </td>
-        <td>{{ issue.pub_date|timesince }} ago </td>
+        <td>{{ issue.pub_date|timesince }} ago</td>
     </tr>
     {% endfor %}
 
