@@ -17,7 +17,6 @@
 
 <table id="issue-table">
     <tr class="header">
-        <td>#</td>
         <td>Title</td>
         <td>Type</td>
         <td>Submitter</td>
@@ -28,7 +27,6 @@
 
     {% for issue in issues %}
     <tr class="{% cycle odd,even %}{% if issue.get_status_display == 'Complete' %} complete{% endif %}{% if issue.get_status_display == 'Reopened' %} reop{% endif %}{% if forloop.last %} last{% endif %}">
-        <td>{{ issue.id }}</td>
         <td><a href="{% url issue-detail issue.id %}" title="{{ issue.title }}">{{ issue.title }}</a> </td>
         <td>{{ issue.get_type_display }}</td>
         <td><a href="{% url profile-user issue.submitter.username %}" title="{{ issue.submiter }} profile">{{ issue.submitter }}</a></td>

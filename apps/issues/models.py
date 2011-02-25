@@ -36,7 +36,7 @@ class Issue(models.Model):
     priority = models.IntegerField(default=3, choices=PRIORITY_CHOICES)
 
     class Meta:
-        ordering = ['status', 'priority', 'pub_date', 'title']
+        ordering = ['-pub_date']
 
     def __unicode__(self):
         return self.title
