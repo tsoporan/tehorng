@@ -3,12 +3,10 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 STATUS_CHOICES = (
-    (1, 'Open'),
-    (2, 'Working'),
-    (3, 'Closed'),
-    (4, 'Pending'),
-    (5, 'Reopened'),
-    (6, 'Complete'),
+    (1, 'New'),
+    (2, 'Accepted'),
+    (3, 'Reopened'),
+    (4, 'Closed'),
 )
 
 PRIORITY_CHOICES = (
@@ -32,8 +30,8 @@ class Issue(models.Model):
     submitter = models.ForeignKey(User)
     type = models.IntegerField(choices=ISSUE_TYPES)
     description = models.TextField(blank=True)
-    status = models.IntegerField(default=4, choices=STATUS_CHOICES)
-    priority = models.IntegerField(default=3, choices=PRIORITY_CHOICES)
+    status = models.IntegerField(default=1, choices=STATUS_CHOICES)
+    priority = models.IntegerField(default=6, choices=PRIORITY_CHOICES)
 
     class Meta:
         ordering = ['-pub_date']
@@ -55,8 +53,8 @@ class Issue(models.Model):
     
     @property
     def is_complete(self):
-        if self.status == 6: return True
+        if self.status == 4: return True
 
     @property
     def is_reopened(self):
-        if self.status == 5: return True   
+        if self.status == 3: return True   
