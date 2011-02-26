@@ -13,46 +13,17 @@ from submissions.models.link import Link
 from tagging.models import Tag, TaggedItem
 from activity.signals import delete_object
 import inspect
+from datetime import datetime, timedelta
 
-@login_required
-def delete_confirm(request, obj):
-    """
-    A general delete_confirm function that relies on the "obj" passed in to determine next course of action. 
-    """
-    if isinstance(obj, Artist):
-        artist = obj
-        if request.method == 'POST' and 'yes' in request.POST:
-            messages.success(request, "\"%s\" deleted." % (artist.name,))
-            delete_object.send(sender=inspect.stack()[0][3], instance=artist, action="Delete")
-            artist.delete()
-            return HttpResponseRedirect(reverse('artist-index'))
-        elif request.method == 'POST' and 'no' in request.POST:
-            return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
+from tracking.models import Hit
 
-    if isinstance(obj, Album):
-        album = obj
-        artist = album.artist
-        if request.method == 'POST' and 'yes' in request.POST:
-            messages.success(request, "\"%s\" deleted." % (album.name,))
-            delete_object.send(sender=inspect.stack()[0][3], instance=album, action="Delete")
-            album.delete()
-            return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
-        elif request.method == 'POST' and 'no' in request.POST:
-            return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
-    
-    if isinstance(obj, Link):
-        link = obj
-        album = link.album
-        artist = album.artist
-        if request.method == 'POST' and 'yes' in request.POST:
-            messages.success(request, "\"%s\" deleted." % (link,))
-            delete_object.send(sender=inspect.stack()[0][3], instance=link, action="Delete")
-            link.delete()
-            return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
-        elif request.method == 'POST' and 'no' in request.POST:
-            return HttpResponseRedirect(reverse('album-detail', args=[artist.slug, album.slug]))
-    
-    return render_to_response('tehorng/delete_confirm.html', locals(), context_instance=RequestContext(request))
+from collections import Counter, OrderedDict
+
+from django.contrib.contenttypes.models import ContentType
+from django.core.cache import cache
+
+import pickle
+import json
 
 def autocomplete_data(request):
     results = "" 
@@ -68,3 +39,67 @@ def autocomplete_data(request):
     #return HttpResponse(json, mimetype='application/json')
     return HttpResponse(results)
 
+def get_popular(ctype, filterby):
+    ct = ctype 
+    counter = Counter()
+    now = datetime.now()
+    hits = Hit.objects.all()
+
+    loads = pickle.loads
+    dumps = pickle.dumps
+
+    if filterby == "hourly":
+        counter.clear()
+    
+        if cache.has_key('popular_hourly'):
+            results = loads(cache.get('popular_hourly'))
+        else:
+            hourago = now - timedelta(hours=1)
+            hits = hits.filter(content_type=ct, timestamp__range=(hourago, now))
+            for obj in hits:
+                counter[obj.content_object] += 1                        
+            results = counter.most_common()[:20]
+            cache.set('popular_hourly', dumps(results), 60*60) #cache for an hour
+
+    elif filterby == "daily":
+        counter.clear()
+        dayago = now - timedelta(days=1)
+        
+        if cache.has_key('popular_daily'):
+            results = loads(cache.get('popular_daily'))
+        else:
+            hits  = hits.filter(content_type=ct, timestamp__range=(dayago, now))
+            for obj in hits:
+                counter[obj.content_object] += 1                        
+            results = counter.most_common()[:20]
+            cache.set('popular_daily', dumps(results), 60*60*24) #cache for a day
+
+    elif filterby == "monthly":
+        counter.clear()
+        monthago = now - timedelta(days=30)
+        
+        if cache.has_key('popular_monthly'):
+            results = loads(cache.get('popular_monthly'))
+        else:
+            hits = hits.filter(content_type=ct, timestamp__range=(monthago, now))
+            for obj in hits: 
+                counter[obj.content_object] += 1                        
+            results = counter.most_common()[:20]
+            cache.set('popular_monthly', dumps(results), 60*60*24*30) #cache for month
+
+    else: #all results
+        counter.clear()
+ 
+        if cache.has_key('popular_alltime'):
+            results = pickle.loads(cache.get('popular_alltime'))
+        else:
+            hits = hits.filter(content_type=ct)
+            for obj in hits:
+                counter[obj.content_object] += 1                        
+            results = counter.most_common()[:20]
+            cache.set('popular_alltime', pickle.dumps(results), 60*60*24*30) #cache for month
+
+    rdict = dict([(r[0].name, r[1]) for r in results])
+    odict = OrderedDict(sorted(rdict.items(), key=lambda i: i[1], reverse=True))
+
+    return json.dumps(odict)

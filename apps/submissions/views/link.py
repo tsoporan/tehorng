@@ -12,7 +12,6 @@ from django.forms.formsets import formset_factory
 from submissions.models.artist import Artist
 from submissions.models.album import Album
 from submissions.models.link import Link
-from submissions.views.utils import delete_confirm
 from submissions.models.utils import gen_hash
 from django.db.utils import IntegrityError
 from reporting.models import Report

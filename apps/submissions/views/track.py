@@ -13,7 +13,6 @@ from submissions.models.artist import Artist
 from submissions.models.album import Album
 from submissions.models.link import Link
 from submissions.models.track import Track
-from submissions.views.utils import delete_confirm
 from submissions.models.utils import gen_hash
 from django.db.utils import IntegrityError
 from reporting.models import Report
@@ -21,7 +20,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.forms.models import modelformset_factory
 from django.forms.models import model_to_dict
 from django.forms.models import inlineformset_factory
-from activity.signals import add_object, edit_object
+from activity.signals import add_object, edit_object, delete_object
 import inspect
 
 @login_required
