@@ -1,0 +1,34 @@
+{% load submission_tags %}
+
+{# Artist case #}
+{% if ctype.name|lower == "artist" %}
+{% for obj,views in objects %}
+    <li>
+    <a href="{% url artist-detail obj.slug %}" title="{{ obj }}">{{ obj }}</a> <span> views <strong> {{ views }} </strong>
+    </li>
+{% endfor %}
+{% endif %}
+
+{# Album case #}
+{% if ctype.name|lower == "album" %}
+
+{% for obj,views in objects %}
+    <li>
+	<a href="{% url album-detail obj.artist.slug obj.slug %}" title="{{ obj }}">{{ obj.name|truncate_chars:20 }}</a>
+	<span> views <strong>{{ views }}</strong></span>
+	<span class="who">{{ obj.artist }} </span>
+    </li>
+{% endfor %}
+{% endif %}
+
+{# Link case #}
+{% if ctype.name|lower == "link" %}
+{% for obj, views in objects %}
+    <li>
+    <a href="{% url track-link obj.hash %}" title="link for {{ obj.album }}">{{ obj|clean_url }}</a>
+	<span> views <strong>{{ views }}</strong></span>
+	<span class="who">{{ obj.album.artist }} - {{ obj.album }} </span>
+    </li>
+{% endfor %}
+{% endif %}
+

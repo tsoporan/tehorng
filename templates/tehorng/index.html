@@ -10,10 +10,22 @@
 		$('#id_q').click(function () {
 			$(this).attr({ value: '' });
 		});
-		//$('#id_q').autocomplete('/autocomplete_data/', {
-		//	max: 7 
-		//});
-	});
+
+        	
+        $('span.popularfilters a').click(function() {
+            $('span.popularfilters a').removeClass('selected');
+            $(this).addClass('selected');
+            var filterby = this.href.split('#')[1];
+            $('ul.popular-artists').load('/popular/artist/' + filterby + '/').fadeIn('slow');         
+            $('ul.popular-albums').load('/popular/album/' + filterby + '/').fadeIn('slow');         
+            $('ul.popular-links').load('/popular/link/' + filterby + '/').fadeIn('slow');         
+            return false;
+        });
+        $('ul.popular-artists').load('/popular/artist/daily/').fadeIn('slow');         
+        $('ul.popular-albums').load('/popular/album/daily/').fadeIn('slow');         
+        $('ul.popular-links').load('/popular/link/daily/').fadeIn('slow');         
+
+    });
 	</script>
     {% if not user.is_authenticated %}
     <script type="text/javascript">
@@ -104,59 +116,21 @@
 </section>
 
 <section id="popular">
-	<h3>popular</h3>
+	<h3>popular <span class="popularfilters"><a href="#hourly">hourly</a> | <a href="#daily" class="selected">daily</a> | <a href="#weekly">weekly</a> | <a href="#monthly">monthly</a> | <a href="#alltime">all time</a></span></h3>
 	<ul>
 		<li>
 			<h4> artists </h4>
 			<ul class="popular-artists">
-			{% if popular_artists %}
-            {% cache 3600 popularartists %}
-            {% for artist in popular_artists %}
-                <li>
-					<a href="{% url artist-detail artist.object.slug %}" title="{{ artist.object }}">{{ artist.object }}</a>
-					<span> views <strong>{{ artist.hits }}</strong></span>
-				</li>
-			{% endfor %}
-            {% endcache %}
-			{% else %}
-				<li> No popular artists yet. </li>
-			{% endif %}
 			</ul>
 		</li>
 		<li>
 			<h4> albums </h4>
 			<ul class="popular-albums">
-			{% if popular_albums %} 
-            {% cache 3600 popularalbums %}
-            {% for album in popular_albums %}
-				<li>
-					<a href="{% url album-detail album.object.artist.slug album.object.slug %}" title="{{ album.object }}">{{ album.object.name|truncate_chars:20 }}</a>
-					<span> views <strong>{{ album.hits }}</strong></span>
-					<span class="who">{{ album.object.artist }} </span>
-				</li>
-			{% endfor %}
-            {% endcache %}
-			{% else %}
-				<li> No popular albums yet. </li>	
-			{% endif %}
 			</ul>
 		</li>
 		<li>
 			<h4> links </h4>
 			<ul class="popular-links">
-			{% if popular_links %}
-            {% cache 3600 popularlinks %}
-			{% for link in popular_links %}
-				<li>
-					<a href="{% url track-link link.object.hash %}" title="link for {{ link.object.album }}">{{ link.object|clean_url }}</a>
-					<span> views <strong>{{ link.hits }}</strong></span>
-					<span class="who">{{ link.object.album.artist }} - {{ link.object.album }} </span>
-				</li>
-			{% endfor %}
-            {% endcache %}
-			{% else %}
-				<li> No popular links yet. </li>
-			{% endif %}
 			</ul>
 		</li>
 	</ul>
