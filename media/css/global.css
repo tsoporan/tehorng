@@ -185,10 +185,10 @@ section#fresh h3 {
     text-align: left;
 }
 section#popular h3 {
-    text-align: center;
+    text-align: left;
 }
 section#stats h3 {
-    text-align: right;
+    text-align: left;
 }
 #fresh h4, #popular h4, #stats h4 {
     font-weight: bold;
@@ -1762,4 +1762,13 @@ section#issue h3 {
 #issue-comment-form {
     border-top: 2px solid #ddd;
     padding-top: 20px;
+}
+span.popularfilters {
+    font-size: 40%;
+    font-weight: normal;
+    float: right;
+    margin: 10px 0 0;
+}
+span.popularfilters a.selected {
+    color: #000;
 }
