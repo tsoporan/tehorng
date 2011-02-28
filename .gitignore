@@ -15,6 +15,7 @@
 media/artists/*
 media/albums/*
 media/cache
+media/admin
 
 xapian/*
 logs/*
