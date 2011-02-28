@@ -11,10 +11,13 @@ from issues.models import Issue
 
 from django.contrib import messages
 
+from issues.commit_history import get_commit_history
+
 def issues_list(request, template='issues/issue_list.html'):
     issues = Issue.objects.all()
     return render_to_response(template, {
         'issues': issues,
+        'commits': get_commit_history(),
     }, context_instance=RequestContext(request))
 
 @login_required

@@ -35,6 +35,13 @@
         <td>{{ issue.pub_date|timesince }} ago</td>
     </tr>
     {% endfor %}
-
 </table>
+{% if commits %}
+<h3> Commit History </h3>
+<ul id="commits">
+    {% for commit in commits %}
+    <li class="commit"> {{ commit }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock content %}

@@ -1712,6 +1712,7 @@ a.create-issue:hover {
     width: 100%;
     background: #333;
     margin-top: 5px;
+    margin-bottom: 25px;
 }
 #issue-table tr.header {
     border-bottom: 1px solid #eee;
@@ -1771,4 +1772,22 @@ span.popularfilters {
 }
 span.popularfilters a.selected {
     color: #000;
+}
+#commits {
+    margin: 15px 0;
+}
+li.commit {
+    padding: 10px;
+    margin: 5px 0;
+    background: #f9f9f9;
+    font-size: 90%;
+}
+li.commit strong {
+    display: block;
+    float: right;
+    font-size: 70%;
+}
+li.commit a {
+    font-weight: bold;
+    text-decoration: none;
 }
