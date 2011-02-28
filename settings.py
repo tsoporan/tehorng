@@ -58,7 +58,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
-
     #Handle Banned IP/Users
     'tracking.middleware.BannedMiddleware', 
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -120,7 +119,6 @@ INSTALLED_APPS = (
     'south',
     'pagination',
     'reversion',
-
     'indexer',
     'paging',
     'sentry',
