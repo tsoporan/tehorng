@@ -13,12 +13,10 @@ from haystack.forms import SearchForm
 from django.views.decorators.cache import cache_page
 import datetime
 from updates.models import Update
+from submissions.views.utils import get_popular
+from django.contrib.contenttypes.models import ContentType
 
-
-def index(request):
-    tracked = TrackedArtist.objects.order_by('-hits')[:20]
-    t_artists= [artist for artist in tracked if artist.object.is_public][:10]
-
+def index(request, template="tehorng/index.html"):
     now = datetime.datetime.now()
     for update in Update.objects.filter(expired=False):
         if update.expires < now:
@@ -36,12 +34,9 @@ def index(request):
         'latest_artists' : Artist.objects.filter(is_valid=True, is_deleted=False).order_by('-created')[:10],
         'latest_albums' : Album.objects.filter(is_valid=True, is_deleted=False).order_by('-created')[:10],
         'latest_links' : Link.objects.order_by('-created').filter(is_deleted=False)[:10],
-        'popular_artists' : t_artists,
-        'popular_albums' : TrackedAlbum.objects.order_by('-hits')[:10],
-        'popular_links' : TrackedLink.objects.order_by('-hits')[:10],
         'top_contrib_artists': User.objects.annotate(Count('artist')).order_by('-artist__count')[1:11], #get rid of tehorng
         'top_contrib_albums': User.objects.annotate(Count('album')).order_by('-album__count')[1:11], #get rid of tehorng
         'top_contrib_links': User.objects.annotate(Count('link')).order_by('-link__count')[:10],
         'form' : SearchForm(initial={'q': "artist, album, or song"}),
     })
-    return render_to_response('tehorng/index.html', context)
+    return render_to_response(template, context)
