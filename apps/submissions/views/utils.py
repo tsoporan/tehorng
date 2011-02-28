@@ -108,12 +108,12 @@ def get_popular(ctype, filterby, num=20):
         cache_key = 'popular_alltime_%s' % ctype 
  
         if cache.has_key(cache_key):
-            results = pickle.loads(cache.get(cache_key))
+           results = pickle.loads(cache.get(cache_key))
         else:
             hits = hits.filter(content_type=ct)
             for obj in hits:
                 counter[obj.content_object] += 1                        
-            results = counter.most_common()[:num]
+            results = counter.most_common(num)
             cache.set(cache_key, pickle.dumps(results), 60*60*24*30) #cache for month
 
     rdict = dict([(r[0], r[1]) for r in results])
