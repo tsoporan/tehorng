@@ -25,6 +25,7 @@ from django.core.cache import cache
 import pickle
 import json
 
+
 def autocomplete_data(request):
     results = "" 
     if 'q' in request.GET and request.method == 'GET':
@@ -40,82 +41,72 @@ def autocomplete_data(request):
     return HttpResponse(results)
 
 def get_popular(ctype, filterby, num=20):
-    ct = ctype 
-    counter = Counter()
+    ct = ContentType.objects.get(name__iexact=ctype)
     now = datetime.now()
-    hits = Hit.objects.all()
 
     loads = pickle.loads
     dumps = pickle.dumps
 
+    norm_sql =  "select * from (select object_id,content_type_id,count(*) from tracking_hit group by object_id, content_type_id) as foo WHERE content_type_id = %s \
+                 order by count desc limit 20"
+    
+    range_sql = "select * from (select object_id,content_type_id,count(*) from tracking_hit where timestamp between %s and %s \
+                 group by object_id, content_type_id) as foo WHERE content_type_id = %s order by count desc limit 20"
+        
+    def get_results(sql, ctype, start_date=None, end_date=None):
+        cursor = connection.cursor()
+        if start_date and end_date:
+            cursor.execute(sql, [start_date, end_date, ctype.id])
+        else:
+            cursor.execute(sql, [ct.id])
+        fetched = cursor.cursor.fetchall()
+        return [(ctype.model_class().objects.get(id=result[0]), result[2]) for result in fetched] 
+
     if filterby == "hourly":
-        counter.clear()
+        hourago = now - timedelta(hours=1) 
         cache_key = 'popular_hourly_%s' % ctype 
         if cache.has_key(cache_key):
             results = loads(cache.get(cache_key))
         else:
-            hourago = now - timedelta(hours=1)
-            hits = hits.filter(content_type=ct, timestamp__range=(hourago, now))
-            for obj in hits:
-                counter[obj.content_object] += 1                        
-            results = counter.most_common()[:num]
-            cache.set(cache_key, dumps(results), 60*60) #cache for an hour
-
+            results = get_results(range_sql, ct, hourago, now) 
+            cache.set(cache_key, dumps(results), 60*60) #cache for an hour 
+    
     elif filterby == "daily":
-        counter.clear()
         dayago = now - timedelta(days=1)
         cache_key = 'popular_daily_%s' % ctype 
         if cache.has_key(cache_key):
             results = loads(cache.get(cache_key))
         else:
-            hits  = hits.filter(content_type=ct, timestamp__range=(dayago, now))
-            for obj in hits:
-                counter[obj.content_object] += 1                        
-            results = counter.most_common()[:num]
+            results = get_results(range_sql, ct, dayago, now) 
             cache.set(cache_key, dumps(results), 60*60*24) #cache for a day
 
     elif filterby == "weekly":
-        counter.clear()
         weekago = now - timedelta(days=7)
         cache_key = 'popular_weekly_%s' % ctype
 
         if cache.has_key(cache_key):
             results = loads(cache.get(cache_key))
         else:
-            hits = hits.filter(content_type=ct, timestamp__range=(weekago, now))
-            for obj in hits:
-                counter[obj.content_object] += 1
-            results = counter.most_common()[:num]
-            cache.set(cache_key, dumps(results), 60*60*24*7) #cache for a week
+            results = get_results(range_sql, ct, weekago, now)
+            cache.set(cache_key, dumps(results), 60*60*24) #cache for a day
 
     elif filterby == "monthly":
-        counter.clear()
         monthago = now - timedelta(days=30)
         cache_key = 'popular_monthly_%s' % ctype 
 
-        
         if cache.has_key(cache_key):
             results = loads(cache.get(cache_key))
         else:
-            hits = hits.filter(content_type=ct, timestamp__range=(monthago, now))
-            for obj in hits: 
-                counter[obj.content_object] += 1                        
-            results = counter.most_common()[:num]
-            cache.set(cache_key, dumps(results), 60*60*24*30) #cache for month
+            results = get_results(range_sql, ct, monthago, now)
+            cache.set(cache_key, dumps(results), 60*60*24) #cache for a day
 
     else: #all results
-        counter.clear()
         cache_key = 'popular_alltime_%s' % ctype 
- 
+
         if cache.has_key(cache_key):
            results = pickle.loads(cache.get(cache_key))
         else:
-            hits = hits.filter(content_type=ct)
-            for obj in hits:
-                counter[obj.content_object] += 1                        
-            results = counter.most_common(num)
-            cache.set(cache_key, pickle.dumps(results), 60*60*24*30) #cache for month
+            results = get_results(norm_sql, ct)
+            cache.set(cache_key, pickle.dumps(results), 60*60*24) #cache for a day
 
-    rdict = dict([(r[0], r[1]) for r in results])
-    odict = OrderedDict(sorted(rdict.items(), key=lambda i: i[1], reverse=True))
-    return odict
+    return results
