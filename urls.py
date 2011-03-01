@@ -52,6 +52,7 @@ urlpatterns = patterns('',
     url(r'^robots.txt$', 'django.views.generic.simple.direct_to_template', {'template': 'robots.txt'}),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^sentry/', include('sentry.urls')),
+    url(r'^vote/', include('voting.urls')),
     ### Seriving static media with django 
     ### NOTE: this is for development ONLY, strongly encouranged to use a seperate server to handle static content
     #(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),

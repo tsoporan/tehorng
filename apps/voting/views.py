@@ -151,3 +151,4 @@ def xmlhttprequest_vote_on_object(request, model, direction,
         'success': True,
         'score': Vote.objects.get_score(obj),
     }))
+

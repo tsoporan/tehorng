@@ -7,7 +7,7 @@ import os
 from django.conf import settings
 
 def popular(request, ctype, filterby, template="submissions/popular/popular_load.html"):
-    popular_list = get_popular(ctype=ctype, filterby=filterby.lower())
+    popular_list = get_popular(ctype=ctype, filterby=filterby.lower(), num=10)
 
     return render_to_response(template, {
         'ctype': ctype,
