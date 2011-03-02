@@ -6,8 +6,6 @@ from submissions.models.album import Album, AlbumResource
 from submissions.models.link import Link
 from submissions.models.track import Track
 
-from reversion.admin import VersionAdmin
-
 from django.contrib.comments.admin import CommentsAdmin
 from django.contrib.comments.models import Comment 
 
@@ -36,7 +34,7 @@ class TrackInline(admin.TabularInline):
     model = Track
     extra = 3
 
-class ArtistAdmin(VersionAdmin):
+class ArtistAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug','cleaned_name', 'id', 'is_valid', 'is_dmca', 'uploader', 'created', 'modified')
     search_fields = ('name',)
     date_hierarchy = 'created'
@@ -55,7 +53,7 @@ class ArtistAdmin(VersionAdmin):
         }),
     )
 
-class AlbumAdmin(VersionAdmin):
+class AlbumAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug','cleaned_name', 'id', 'artist', 'uploader', 'created', 'modified')
     list_filter = ('is_valid', 'is_public')
     search_fields = ('name',)
@@ -74,7 +72,7 @@ class AlbumAdmin(VersionAdmin):
     )
 
 
-class LinkAdmin(VersionAdmin):
+class LinkAdmin(admin.ModelAdmin):
     list_display = ('url', 'album', 'get_artist', 'uploader', 'created', 'modified')
     search_fields = ('url', 'bitrate', 'format', 'uploader__username',)
     date_hierarchy = 'created'
