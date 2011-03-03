@@ -1,10 +1,18 @@
 {% extends 'base.html' %}
+{% block page_title %} {{ artist }} vote {{ direction }} {% endblock %}
+
+{% block breadcrumbs %} 
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li><a href="{% url artist-index %}" title="Artist list">Artist List</a> &raquo;</li>
+    <li><a href="{% url artist-detail artist.slug %}" title="{{ artist }}">{{ artist }}</a> &raquo;</li>
+    <li> Confirm vote </li>
+{% endblock %}
+
+{% block header %} Confirm "{{ direction }}" vote for {{ artist }}{% endblock %}
 
 {% block content %}
-<h3> Confirm your Vote </h3>
-<p> You are voting: <strong>{{ direction }} </strong></p>
-<form action="" method="post"> {% csrf_token %}
-	<input type="submit" value="confirm" name="submit"> 
-	<input type="hidden" name="next" value="{% url artist-detail link.album.artist.slug %}">
-</form>
+   <form action="" method="POST">{% csrf_token %}
+        <input type="submit" value="Yes">
+        <input type="hidden" name="next" value="{{ artist.get_absolute_url }}">
+   </form> 
 {% endblock %}

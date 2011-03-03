@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block page_title %} {{ album }} vote {{ direction }} {% endblock %}
+
+{% block breadcrumbs %} 
+    <li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
+    <li><a href="{% url artist-index %}" title="Artist list">Artist List</a> &raquo;</li>
+    <li><a href="{% url artist-detail album.artist.slug %}" title="{{ album.artist }}">{{ album.artist }}</a> &raquo;</li>
+    <li><a href="{% url album-detail album.artist.slug album.slug %}" title="{{ album }}">{{ album }}</a> &raquo;</li>
+    <li> Confirm vote </li>
+{% endblock %}
+
+{% block header %} Confirm "{{ direction }}" vote for {{ album.artist }}:{{ album }}{% endblock %}
+
+{% block content %}
+   <form action="" method="POST">{% csrf_token %}
+        <input type="submit" value="Yes">
+        <input type="hidden" name="next" value="{{ album.get_absolute_url }}">
+   </form> 
+{% endblock %}

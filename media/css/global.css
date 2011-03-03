@@ -406,9 +406,20 @@ p.bio {
 ul.tag-list {
     padding: 5px 0;
 }
-ul.tag-list li {
-    display: inline;
-    margin: 3px;
+ul.tag-list li a {
+    margin: 5px 0;
+    background: #eee;
+    color: #444;
+    font-weight: bold;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #d3d3d3;
+    text-decoration: none;
+    line-height: 2.3;
+    white-space: nowrap;
+}
+ul.tag-list li a:hover {
+    background: #ccc;
 }
 body.artist-list a.add {
     float: right;
@@ -1791,3 +1802,7 @@ li.commit a {
     font-weight: bold;
     text-decoration: none;
 }
+ul#activity {
+    
+}
+

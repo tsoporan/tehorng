@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
+{% load activity_tags %}
 {% load pagination_tags %}
 {% block page_title %}{{ artist.name }}{% endblock %}
 {% block body_class %}artist-detail{% endblock %}
@@ -97,6 +98,17 @@
 
 <h3> Stats </h3>
 <p class="views"><span class="orng">{{ hits }}</span> views</p>
+
+
+{# {% get_recent_activity artist as activity %}
+{% if activity %}
+<!--    <ul id="activity">
+        {% for action in activity %}
+        <li class="action"><time>{{ action.timestamp|timesince }}</time> ago {{ action.human_msg }} </li>
+        {% endfor %}
+    </ul>-->
+{% endif %} #}
+
 
 </aside> <!-- end sidebar -->
 
