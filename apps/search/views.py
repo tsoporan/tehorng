@@ -8,6 +8,7 @@ from submissions.models.artist import Artist
 from submissions.models.album import Album
 from submissions.models.track import Track
 from haystack.query import SearchQuerySet
+from search.models import Query
 
 RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 20)
 
@@ -15,6 +16,10 @@ def search(request, template="search/search.html"):
     query = request.GET.get('q', '')
     if query:
         results = SearchQuerySet().filter(content=query)
+        q, created = Query.objects.get_or_create(text=query)
+        if not created:
+            q.hits += 1
+            q.save()
     else:
         results = None
     return render_to_response(template, {
