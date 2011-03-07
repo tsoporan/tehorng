@@ -148,18 +148,11 @@ def add_artist(request, template='submissions/addartist.html'):
             cd = form.cleaned_data
             artist = form.save(commit=False) #modelform requires all fields (we need to prefill excluded)
             artist.uploader = user
-            if user.is_staff:
-                artist.is_valid = True #because a user is adding we need to review this first
-                artist.save()
-                add_object.send(sender=inspect.stack()[0][3], instance=artist, action="Add")
-                messages.success(request, "Artist added successfully. (Since you are staff)")
-                return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
-            else:
-                artist.is_valid = False #because a user is adding we need to review this first
-                artist.save()
-                add_object.send(sender=inspect.stack()[0][3], instance=artist, action="Add")
-                messages.success(request, "Thanks! Artist has been queued up for approval. =)")
-                return HttpResponseRedirect(reverse('artist-index'))
+            artist.is_valid = True #because a user is adding we need to review this first
+            artist.save()
+            add_object.send(sender=inspect.stack()[0][3], instance=artist, action="Add")
+            messages.success(request, "Artist added successfully.")
+            return HttpResponseRedirect(reverse('artist-detail', args=[artist.slug]))
     else:
         form = ArtistForm()
     return render_to_response(template, {

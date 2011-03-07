@@ -40,7 +40,7 @@ def autocomplete_data(request):
     #return HttpResponse(json, mimetype='application/json')
     return HttpResponse(results)
 
-def get_popular(ctype, filterby, num=20):
+def get_popular(ctype, filterby, num=10):
     ct = ContentType.objects.get(name__iexact=ctype)
     now = datetime.now()
 
@@ -48,17 +48,17 @@ def get_popular(ctype, filterby, num=20):
     dumps = pickle.dumps
 
     norm_sql =  "select * from (select object_id,content_type_id,count(*) from tracking_hit group by object_id, content_type_id) as foo WHERE content_type_id = %s \
-                 order by count desc limit 20"
+                 order by count desc limit %s"
     
     range_sql = "select * from (select object_id,content_type_id,count(*) from tracking_hit where timestamp between %s and %s \
-                 group by object_id, content_type_id) as foo WHERE content_type_id = %s order by count desc limit 20"
+                 group by object_id, content_type_id) as foo WHERE content_type_id = %s order by count desc limit %s"
         
     def get_results(sql, ctype, start_date=None, end_date=None):
         cursor = connection.cursor()
         if start_date and end_date:
-            cursor.execute(sql, [start_date, end_date, ctype.id])
+            cursor.execute(sql, [start_date, end_date, ctype.id, num])
         else:
-            cursor.execute(sql, [ct.id])
+            cursor.execute(sql, [ct.id, num])
         fetched = cursor.cursor.fetchall()
         return [(ctype.model_class().objects.get(id=result[0]), result[2]) for result in fetched] 
 
