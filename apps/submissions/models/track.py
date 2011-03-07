@@ -34,6 +34,10 @@ class Track(models.Model):
     def __unicode__(self):
         return self.title
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('album-detail', (), {'artist': self.album.artist.slug, 'album': self.album.slug })
+
     def save(self, *args, **kwargs):
         if not self.cleaned_name:
             self.cleaned_name = strip_punc(self.title)   
