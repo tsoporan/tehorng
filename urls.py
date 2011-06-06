@@ -57,6 +57,6 @@ urlpatterns = patterns('',
     ### NOTE: this is for development ONLY, strongly encouranged to use a seperate server to handle static content
     #(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
     ###
-    #url(r'^_testing/$', 'django.views.generic.simple.direct_to_template', {'template': 'testing.html'}),
+    url(r'^_testing/$', 'django.views.generic.simple.direct_to_template', {'template': 'testing.html'}),
     url(r'^', include('django.contrib.flatpages.urls')),
 )

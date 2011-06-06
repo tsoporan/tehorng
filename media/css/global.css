@@ -421,6 +421,10 @@ ul.tag-list li a {
 ul.tag-list li a:hover {
     background: #ccc;
 }
+ul.tag-list-album li {
+    display: inline;
+}
+
 body.artist-list a.add {
     float: right;
     font-size: 50%;
@@ -1804,5 +1808,24 @@ li.commit a {
 }
 ul#activity {
     
+}
+
+.like, .dislike {
+    color: #fff;
+    font-weight: bold;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    padding: 3px;
+    text-decoration: none;
+}
+.like {
+    background: #21D92D;
+    border: 1px solid #05b511;
+}
+
+.dislike {
+    background: #e61e1e;
+    border: 1px solid #c20808;
 }
 

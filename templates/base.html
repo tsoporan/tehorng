@@ -10,7 +10,7 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="description" content="{% block meta_desc %}tehOrng is a search engine for music. Test drive new music and then support the artists!{% endblock %}">
     <meta name="keywords" content="{% block meta_keyw %}tehorng,teh orng,the orng,the orange,christian downloads,christiandl,christian downloads,music downloads,christian music,music search{% endblock %}">
-    <meta name="google-site-verification" content="M1dQivSlLDhcAoxiQo_qmd9_3o1w-ttqhXrFZ23uFBE">
+    <meta name="google-site-verification" content="36MS5r-UubdR0me-O5kPD8wtjDibmQaFIcfjbNu8V5E">
     <meta name="msvalidate.01" content="5B34C2CCEFDA8F0FFDA4ADAEF260B256">
     <meta name="y_key" content="bbf43d644505c4ab">
     <link rel="icon" type="image/png" href="/media/img/orangefav.png">
@@ -120,14 +120,18 @@
 
 <!-- Google Analytics -->
 <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-22315235-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
 </script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-11977941-2");
-pageTracker._trackPageview();
-} catch(err) {}</script>
 <!-- End GA -->
 
 <!-- Start Quantcast tag -->

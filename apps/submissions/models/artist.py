@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from tagging.fields import TagField
 from tracking.models import TrackedArtist
 from django.contrib.contenttypes.models import ContentType
+#import history.models
+import reversion
 
 class Artist(models.Model):
     """
@@ -25,6 +27,8 @@ class Artist(models.Model):
     is_verified = models.BooleanField(default=False, help_text="This is true when an artist gets in touch with us about their tehorng page and would like to be given rights to change the page as they see fit. In cases like these the artist will have complete control over the presentation of the page and the material in it and users will not be able to edit any information.")
 
     objects = ArtistManager()
+
+    #history = history.models.HistoricalRecords()
 
     uploader = models.ForeignKey(User, blank=True, null=True, help_text="The user who added thist artist.")
     
@@ -61,7 +65,8 @@ class Artist(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            from unidecode import unidecode
+            self.slug = slugify(unidecode(self.name))
         if not self.cleaned_name:
             self.cleaned_name = strip_punc(self.name).lower().strip()
         
@@ -101,3 +106,6 @@ class ArtistResource(models.Model):
 
     def __unicode__(self):
         return self.url
+
+
+reversion.register(Artist)

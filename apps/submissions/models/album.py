@@ -53,7 +53,8 @@ class Album(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            from unidecode import unidecode
+            self.slug = slugify(unidecode(self.name))
         if not self.cleaned_name:
             self.cleaned_name = strip_punc(self.name)
         if self.is_deleted:

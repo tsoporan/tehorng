@@ -137,7 +137,7 @@
 		<strong>Modified</strong>: {{ album.modified|date:"F j Y P" }} <br>
 		{% tags_for_object album as albumtags %}
 		<strong>Tags</strong>: 
-		{% if albumtags %}<ul class="tag-list">
+		{% if albumtags %}<ul class="tag-list-album">
 			{% for tag in albumtags %}
 				<li><a href="{% url tag-detail 'albums' tag.id %}" title="" rel="tag">{{ tag }}</a></li> 
 			{% endfor %}

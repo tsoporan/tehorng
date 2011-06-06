@@ -9,8 +9,6 @@
 {% block header %}Add Artist{% endblock %}
 
 {% block content %}
-<p>Artists <strong>currently</strong> require staff approval before they appear on the website. The time it takes to review may vary, but usually takes 1-3 days. </p>
-<p>Once your artist has been approved you, as the uploader, will have the ability to edit information more in depth.</p>
 
 <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
 	{% for field in form %}

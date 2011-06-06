@@ -9,7 +9,7 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 sys.path.append(pjoin(PROJECT_PATH, 'apps'))
 
 DEBUG = False
-TEMPLATE_DEBUG = True #DEBUG 
+TEMPLATE_DEBUG = DEBUG 
 
 ADMINS = (
      ('Your Name', 'your_email@example.com'),
@@ -107,7 +107,9 @@ INSTALLED_APPS = (
     'polls',
     'activity',
     'issues',
+    'history',
     #3rd Party
+    'reversion',
     'haystack',
     'gravatar',
     'django_extensions',

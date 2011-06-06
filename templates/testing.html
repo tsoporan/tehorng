@@ -42,6 +42,34 @@
        cloneMore('div.linktable:last', 'link');
    });
 
+    //like/dislike ajax
+    $('.like').click(function() {
+        $.ajax({
+            type: "POST",
+            url: "/vote/artist/1/upvote",
+            success : function(data) {
+                alert(data);
+            }, 
+            datatype: "json"
+            
+        });
+        return false;
+    });
+    $('.dislike').click(function() {
+        $.ajax({
+            type: "POST",
+            url: "/vote/artist/1/downvote",
+            success : function(data) {
+                var s = JSON.encode(data);
+                alert(s);
+            }, 
+            datatype: "json"
+            
+        });
+        return false;
+    });
+
+
 
 	});
 	</script>
@@ -69,6 +97,12 @@
 	<input type="submit" value="Submit" name="submit">
 </form>
 <input id="add" type="button" value="Add Link">
+
+
+<a class="like" href="">Like</a>
+<a class="dislike" href="">Dislike</a>
+
+
 {% endblock %}
 
 
