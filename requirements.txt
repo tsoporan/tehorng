@@ -1,5 +1,6 @@
+Django
 xapian-haystack
-python-imaging
+PIL
 django-haystack
 django-gravatar
 django-extensions
@@ -8,6 +9,6 @@ sorl-thumbnail
 django-smileys
 south
 django-pagination
-django-sentry
 recaptcha-client
-psycopg2
+pytz
+python-memcached

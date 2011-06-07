@@ -7,7 +7,7 @@ from tagging.fields import TagField
 from tracking.models import TrackedArtist
 from django.contrib.contenttypes.models import ContentType
 #import history.models
-import reversion
+#import reversion
 
 class Artist(models.Model):
     """
@@ -108,4 +108,4 @@ class ArtistResource(models.Model):
         return self.url
 
 
-reversion.register(Artist)
+#reversion.register(Artist)
