@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 import datetime
-from django.template import mark_safe
+from django.utils.safestring import mark_safe
 
 class Action(models.Model):
     ACTION_TYPE = (

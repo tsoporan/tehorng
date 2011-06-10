@@ -19,8 +19,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'postgresql_psycopg2',
-        'NAME': 'your_db_name',
+        'ENGINE': 'sqlite3', #'postgresql_psycopg2',
+        'NAME': pjoin(PROJECT_PATH, 'tehorngdev.db'), #'your_db_name',
         'USER': 'your_db_user',
         'PASSWORD': 'your_pass',
     }
@@ -107,10 +107,10 @@ INSTALLED_APPS = (
     'polls',
     'activity',
     'issues',
-    'history',
+    #'history',
     #3rd Party
-    'reversion',
-    'haystack',
+    #'reversion',
+    #'haystack',
     'gravatar',
     'django_extensions',
     'tagging',
@@ -118,10 +118,10 @@ INSTALLED_APPS = (
     'smileys',
     'south',
     'pagination',
-    'indexer',
+    #'indexer',
     'paging',
-    'sentry',
-    'sentry.client',
+    #'sentry',
+    #'sentry.client',
     'voting',
 )
 

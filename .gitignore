@@ -32,3 +32,4 @@ scrapers/
 irc/
 
 .private-settings
+migrations
