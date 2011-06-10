@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 class UserProfileAdmin(admin.ModelAdmin):
-	list_display = ('user', 'warning', 'verification_key', 'created') 
+	list_display = ('user', 'warning', 'created')#'verification_key', 'created') 
 	search_fields = ('user__username',)
 
 class OnlineUserAdmin(admin.ModelAdmin):

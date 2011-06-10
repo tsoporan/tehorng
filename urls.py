@@ -53,10 +53,10 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^sentry/', include('sentry.urls')),
     url(r'^vote/', include('voting.urls')),
+    url(r'^forum/', include('forum.urls')),
     ### Seriving static media with django 
     ### NOTE: this is for development ONLY, strongly encouranged to use a seperate server to handle static content
     #(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
-    ###
     url(r'^_testing/$', 'django.views.generic.simple.direct_to_template', {'template': 'testing.html'}),
-    url(r'^', include('django.contrib.flatpages.urls')),
+    url(r'', include('django.contrib.flatpages.urls')),
 )

@@ -12,3 +12,5 @@ django-pagination
 recaptcha-client
 pytz
 python-memcached
+feedparser
+redis

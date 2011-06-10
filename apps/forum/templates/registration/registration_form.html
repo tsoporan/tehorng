@@ -1,0 +1,45 @@
+{% extends "forum/base.html" %}
+{% block title %}Sign up{% endblock %}
+{% block breadcrumbs %}
+<a href="{% url forum_index %}">Forums</a>
+&raquo; <strong>Sign up</strong>
+{% endblock %}
+{% block main_content %}
+<p class="description">Fill out the form below (all fields are required) and your account will be created; you'll be sent an email with instructions on how to finish your registration.</p>
+<form action="." method="POST">
+  {% csrf_token %}
+  <div class="module aligned">
+    <h2>Sign up</h2>
+    <div class="form-row">
+      {% if form.username.errors %}{{ form.username.errors.as_ul }}{% endif %}
+      {{ form.username.label_tag }}
+      <div class="form-field">
+        {{ form.username }}
+      </div>
+    </div>
+    <div class="form-row">
+      {% if form.email.errors %}{{ form.email.errors.as_ul }}{% endif %}
+      {{ form.email.label_tag }}
+      <div class="form-field">
+        {{ form.email }}
+      </div>
+    </div>
+    {% if form.non_field_errors %}{{ form.non_field_errors.as_ul }}{% endif %}
+    <div class="form-row">
+      {% if form.password1.errors %}{{ form.password1.errors.as_ul }}{% endif %}
+      {{ form.password1.label_tag }}
+      <div class="form-field">
+        {{ form.password1 }}
+      </div>
+    </div>
+    <div class="form-row">
+      {% if form.password2.errors %}{{ form.password2.errors.as_ul }}{% endif %}
+      {{ form.password2.label_tag }}
+      <div class="form-field">
+        {{ form.password2 }}
+      </div>
+    </div>
+  </div>
+  <div class="buttons"><input type="submit" value="Register"></div>
+</form>
+{% endblock %}

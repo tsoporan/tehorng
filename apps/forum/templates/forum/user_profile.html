@@ -1,0 +1,130 @@
+{% extends "forum/base.html" %}{% load forum_tags %}
+{% block main_content %}
+{% ifequal user.id forum_user.id %}
+<div class="tools">
+  <div class="actions">
+    <a href="{% url auth_password_change %}">Change Password</a>
+  </div>
+</div>
+{% endifequal %}
+<div class="col-l">
+  <div class="module forum-profile">
+  <h2><span class="title">{{ title }}</span>{% if user|can_edit_user_profile:forum_user %}<span class="separator"> - </span><span class="controls"><a href="{% url forum_edit_user_forum_profile forum_user.id %}">Edit</a></span>{% endif %}</h2>
+  <table>
+  <tbody>
+    <tr>
+      <th>Avatar</th>
+      <td>{% if forum_profile.avatar %}<img src="{{ forum_profile.avatar }}" alt=""{{ avatar_dimensions }}>{% else %}None{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Group</th>
+      <td>{{ forum_profile.get_group_display }}</td>
+    </tr>
+    <tr>
+      <th>Title</th>
+      <td>{{ forum_profile.title|default:"None" }}</td>
+    </tr>
+    <tr>
+      <th>Posts</th>
+      <td>{{ forum_profile.post_count }}</td>
+    </tr>
+    <tr>
+      <th>Joined</th>
+      <td>{{ forum_user.date_joined|joined_date }}</td>
+    </tr>
+    <tr>
+      <th>Location</th>
+      <td>{% if forum_profile.location %}{{ forum_profile.location }}{% else %}None{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Website</th>
+      <td>{% if forum_profile.website %}<a href="{{ forum_profile.website }}">{{ forum_profile.website }}</a>{% else %}None{% endif %}</td>
+    </tr>
+    {% if redis %}
+    <tr>
+      <th>Last Seen</th>
+      <td>{{ last_seen|timesince }}</td>
+    </tr>
+    <tr>
+      <th>Doing</th>
+      <td>{{ doing|safe }}</td>
+    </tr>
+    {% endif %}
+  </tbody>
+  </table>
+  </div>
+
+  {% ifequal user.id forum_user.id %}
+  <div class="module forum-settings">
+  <h2><span class="title">Your Forum Settings</span><span class="separator"> - </span><span class="controls"><a href="{% url forum_edit_user_forum_settings %}">Edit</a></span></h2>
+  <table>
+  <tbody>
+    <tr>
+      <th>Timezone</th>
+      <td>{{ forum_profile.timezone|default:"None" }}</td>
+    </tr>
+    <tr>
+      <th>Topics Per Page</th>
+      <td>{{ forum_profile.topics_per_page|default:"Default" }}</td>
+    </tr>
+    <tr>
+      <th>Posts Per Page</th>
+      <td>{{ forum_profile.posts_per_page|default:"Default" }}</td>
+    </tr>
+    <tr>
+      <th>Auto Fast Reply</th>
+      <td>{{ forum_profile.auto_fast_reply|yesno:"Yes,No" }}</td>
+    </tr>
+  </tbody>
+  </table>
+  </div>
+  {% endifequal %}
+</div>
+
+<div class="col-r">
+<div class="module last-topics-started">
+<h2><span class="title">Most Recent Topics Started</span>{% if recent_topics %}<span class="separator"> - </span><span class="controls"><a href="{% url forum_user_topics forum_user.id %}">View All Topics</a></span>{% endif %}</h2>
+{% if recent_topics %}
+{% load humanize %}
+<table>
+<col width="35%">
+<col width="15%">
+<col>
+<col width="1">
+{% if redis %}<col width="1">{% endif %}
+<col width="20%">
+<thead>
+  <tr>
+    <th>Topic</th>
+    <th>In Forum</th>
+    <th>Started</th>
+    <th>Posts</th>
+    {% if redis %}<th>Views</th>{% endif %}
+    <th>Last Post</th>
+  </tr>
+</thead>
+<tbody>
+{% for topic in recent_topics %}
+  <tr class="topic {% cycle odd,even %}{% if topic.hidden %} hidden-topic{% endif %}">
+    <td>
+      {% if topic.hidden %}<img src="{{ MEDIA_URL }}img/forum/icon_exclamation.gif" alt="Hidden" title="This topic is hidden">{% endif %}
+      {% if topic.locked %}<img src="{{ MEDIA_URL }}img/forum/icon_lock.gif" alt="Locked" title="This topic is locked">{% endif %}
+      <a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a>
+      {% if topic.description %}<p class="description">{{ topic.description }}</p>{% endif %}
+    </td>
+    <td><a href="{% url forum_forum_detail topic.forum_id %}">{{ topic.forum_name }}</a></td>
+    <td>{{ topic.started_at|timesince }} ago</td>
+    <td class="posts"><a href="{% url forum_topic_post_summary topic.id %}" class="topic-post-summary">{{ topic.post_count|intcomma }}</a></td>
+    {% if redis %}<td class="views">{{ topic.view_count|intcomma }}</td>{% endif %}
+    <td class="last-post">{{ topic.last_post_at|post_time:user }}<br><a href="{% url forum_redirect_to_last_post topic.id %}">Last Post</a> by <a href="{% url forum_user_profile topic.last_user_id %}">{{ topic.last_username }}</a></td>
+  </tr>{% endfor %}
+</tbody>
+</table>
+{% else %}
+<div class="module-body">
+This user has not started any Topics yet.
+</div>
+{% endif %}
+</div>
+</div>
+{% endblock %}

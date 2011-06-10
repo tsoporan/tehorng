@@ -6,28 +6,26 @@ from messaging.models import UserMessage
 
 class RegisterForm(forms.Form):
     username = forms.RegexField(label="Username", regex=r'^\w+$', max_length=35, error_messages={'invalid': "Username must be alphanumeric"})
-    email = forms.EmailField(label="E-Mail")
+    email = forms.EmailField(label="E-Mail", required=True)
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
-    password1 = forms.CharField(label="Password (again)",widget=forms.PasswordInput)
+    #password1 = forms.CharField(label="Password (again)",widget=forms.PasswordInput)
 
     def clean_username(self):
         username = self.cleaned_data['username']
-        if len(username) <= 3:
-            raise forms.ValidationError('Username must be longer than 3 characters.')
         try:
-            User.objects.get(username__iexact=username)
+            user_exists = User.objects.get(username__iexact=username)
             raise forms.ValidationError('Username already exists.')
         except User.DoesNotExist:
             return username
         return username
 
-    def clean(self):
-        if 'password' in self.cleaned_data and 'password1' in self.cleaned_data:
-            if self.cleaned_data['password'] != self.cleaned_data['password1']:
-                raise forms.ValidationError('Your passwords must match!')
-            elif len(self.cleaned_data['password']) <= 5:
-                raise forms.ValidationError('Your password must be greater than 5 characters')
-        return self.cleaned_data
+    #def clean(self):
+        #if 'password' in self.cleaned_data and 'password1' in self.cleaned_data:
+        #    if self.cleaned_data['password'] != self.cleaned_data['password1']:
+        #        raise forms.ValidationError('Your passwords must match!')
+        #    elif len(self.cleaned_data['password']) <= 5:
+        #        raise forms.ValidationError('Your password must be greater than 5 characters')
+        #return self.cleaned_data
 
 class ChangeEmailForm(ModelForm):
     class Meta:
