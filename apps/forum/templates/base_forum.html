@@ -1,32 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
-<head>
-  <title>{% block title %}{{ title }}{% endblock %}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="Author" content="Jonathan Buchanan">
+{% extends "base.html" %}
+
+{% block css %}
+  {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/forum/style.css" media="all">
   <!--[if LT IE 7]><link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/forum/ie.css" media="all"><![endif]-->
-  {% block extrahead %}{% endblock %}
-</head>
-<body>
+{% endblock %}
+  
+{% block extrahead %}{% endblock %}
 
-<div id="userbar">
-{% block userbar %}{% endblock %}
-</div>
+{% block content %}
 
-<div id="breadcrumbs">
-{% block breadcrumbs %}{% endblock %}
-</div>
-
-<div id="content">
 {% block content_title %}{% endblock %}
 {% block main_content %}{% endblock %}
-</div>
 
-<div id="footer">
-  <a href="https://github.com/insin/forum/">Django Forum</a>,
-  <a href="http://www.djangoproject.com/"><img src="{{ MEDIA_URL }}img/forum/djangosite.gif" alt="A Django site." title="A Django site."></a>
-</div>
+{% endblock %}
 
-</body>
-</html>

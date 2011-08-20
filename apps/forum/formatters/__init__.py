@@ -21,7 +21,7 @@ class PostFormatter(object):
     def __init__(self, emoticons=None):
         if emoticons is None: emoticons = {}
         self.emoticon_processor = Emoticons(emoticons,
-            base_url='%sforum/img/emoticons/' % settings.MEDIA_URL)
+            base_url='%simg/forum/emoticons/' % settings.MEDIA_URL)
 
     def format_post(self, body, process_emoticons=True):
         """
@@ -39,7 +39,7 @@ class PostFormatter(object):
         """
         return linebreaks(urlize(escape(body.strip())))
 
-    def quote_post(post):
+    def quote_post(self, post):
         """
         Returns a raw post body which quotes the given Post.
         """
