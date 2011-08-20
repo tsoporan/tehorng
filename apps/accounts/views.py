@@ -27,22 +27,27 @@ def register(request):
         if 'recaptcha_challenge_field' in request.POST:
             check_captcha = captcha.submit(request.POST['recaptcha_challenge_field'], request.POST['recaptcha_response_field'], settings.RECAPTCHA_PRIVATE_KEY, request.META['REMOTE_ADDR'])
             if not check_captcha.is_valid:
-                messages.error(request, "Captcha didn't pan out! '%s'" % check_captcha.error_code)
+                messages.error(request, "Captcha was incorrect!") #% check_captcha.error_code)
                 return HttpResponseRedirect(reverse('register'))
 
         form = RegisterForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             username,email,password = cd['username'], cd['email'], cd['password']   
-            new_user = User.objects.create_user(username = username, email = email, password = password)   
-            profile = UserProfile.objects.create(user=new_user)
+            
+            new_user = User.objects.create_user(username = username, email = email, password = password)  
+
+            #TODO: fix this, weird postgres issue in django 1.3 see trac issue #15682
+            user = User.objects.get(username=new_user.username)
+            profile = UserProfile.objects.create(user=user)
+            
             messages.success(request, "Thanks for registering %s! Welcome to tehorng." % new_user)
             
             authed_user = authenticate(username=username, password=password)
             login(request, authed_user)
             return HttpResponseRedirect(reverse('profile'))    
     else:
-        form = RegisterForm()
+        form = RegisterForm(initial=request.POST)
     return render_to_response('registration/register.html', {
         'form': form,
         'captcha': mark_safe(captcha.displayhtml(settings.RECAPTCHA_PUBLIC_KEY)),
