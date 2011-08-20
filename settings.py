@@ -121,7 +121,7 @@ INSTALLED_APPS = (
     #'history',
     #3rd Party
     'forum',
-    'django_keyerror',
+    #'django_keyerror',
     #'reversion',
     'haystack',
     'gravatar',
@@ -132,7 +132,7 @@ INSTALLED_APPS = (
     'south',
     'pagination',
     #'indexer',
-    'paging',
+    #'paging',
     #'sentry',
     #'sentry.client',
     'voting',
