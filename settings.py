@@ -44,7 +44,7 @@ STATIC_ROOT = pjoin(PROJECT_PATH, 'static')
 
 STATIC_URL = '/static/'
 
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+ADMIN_MEDIA_PREFIX = MEDIA_URL + 'admin/'
 
 STATICFILES_DIRS = (
 )
@@ -69,14 +69,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #Handle Banned IP/Users
     'tracking.middleware.BannedMiddleware', 
     'django.contrib.messages.middleware.MessageMiddleware',
-    #Pagination
     'pagination.middleware.PaginationMiddleware',
-    #Online
     'accounts.middleware.OnlineUserMiddleware',
-    #FlatPage fallback.
+    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
@@ -124,6 +121,7 @@ INSTALLED_APPS = (
     #'history',
     #3rd Party
     'forum',
+    'django_keyerror',
     #'reversion',
     'haystack',
     'gravatar',
