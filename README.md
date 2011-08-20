@@ -15,8 +15,8 @@ Currently the project is developed by a couple developers in their spare time
 A few extra hands on deck would be awesome; particularly in the fields of:
 graphic design, front-end development (CSS, HTML, javascript), and back-end (Python, Django)
 
-If you feel you can lend a hand in any way shape or form don't hesitat to get
-in contact with us (via github) 
+If you feel you can lend a hand in any way shape or form don't hesitate to get
+in contact with us (via github that is @tsoporan @lrvick) 
 
 There are some things that are broken and require attention but for the most
 part the base functionality is there. 
