@@ -6,7 +6,7 @@
 -->
 <html lang="en">
 <head>
-    <title> tehorng : {% block page_title %} squeeze some new tunes into your life {% endblock %} </title>
+    <title> tehorng - {% block page_title %}squeeze and enjoy{% endblock %} </title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <meta name="description" content="{% block meta_desc %}tehOrng is a search engine for music. Test drive new music and then support the artists!{% endblock %}">
     <meta name="keywords" content="{% block meta_keyw %}tehorng,teh orng,the orng,the orange,christian downloads,christiandl,christian downloads,music downloads,christian music,music search{% endblock %}">
@@ -38,7 +38,7 @@
 <body class="{% block body_class %}{% endblock %}">
 <div id="wrapper">
 <header>
-    <h1><a href="{% url index %}" title="tehorng - squeeze some new tunes into your life">tehorng</a></h1>
+    <h1><a href="{% url index %}" title="tehorng - squeeze and enjoy">tehorng</a></h1>
     <nav>
         <ul>
             <li><a href="{% url search %}" title="search">search</a></li>
@@ -47,9 +47,32 @@
             <li><a href="{% url entry-list %}" title="weblog">blog</a></li>
             <li><a class="issue-tracker" href="{% url issues-list %}" title="issue tracker">issue tracker</a></li>
         </ul>
-        <fb:like ref="main" style="position: absolute; left: 0; top:-45px" href="http://tehorng.com" layout="button_count" show_faces="true" width="451" font="verdana"></fb:like>
-        
-      <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://tehorng.com" data-text="tehorng" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script> 
+
+
+        <ul id="social-nav">
+        <li>
+        <!-- facebook button -->
+        <fb:like ref="main" href="http://tehorng.com" layout="button_count" show_faces="true" font="verdana"></fb:like>
+        </li>
+
+        <li>
+        <!-- twitter button -->
+        <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://tehorng.com" data-text="tehorng" data-count="horizontal">Tweet</a>
+        <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script> 
+        </li>
+
+        <li>
+        <!-- google plus button -->
+        <g:plusone size="small"> </g:plusone>
+        <script type="text/javascript">
+          (function() {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = 'https://apis.google.com/js/plusone.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+          })();
+        </script>
+        </li> 
+        </ul>
 
         <ul id="account-nav">
         {% if user.is_authenticated %}
