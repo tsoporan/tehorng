@@ -1,12 +1,34 @@
-_tehorng_ is a search engine/network for music.
+What is it?
+-----------
 
-There are some things that are broken or require attention but for the most
+**tehorng** is a search engine/network for music. It is a place where the
+community can get together to share and discuss music. It is entirely self
+sustained and relies on the userbase to populate it with content and keep it
+active.
+
+
+Helping out
+-----------
+
+Currently the project is developed by a couple developers in their spare time
+(sporatically).
+A few extra hands on deck would be awesome; particularly in the fields of:
+graphic design, front-end development (CSS, HTML, javascript), and back-end (Python, Django)
+
+If you feel you can lend a hand in any way shape or form don't hesitat to get
+in contact with us (via github) 
+
+There are some things that are broken and require attention but for the most
 part the base functionality is there. 
 
 Because of this you should be prepared to encounter bugs or non-working code. 
 
-How to install:
----------------
+How to install
+--------------
+
+tehorng is built on Django a Python web framework. The assumption is that you
+have experience with Django and thus there is some terminology that is Django
+specific.
 
 1. `virtualenv tehorng_env --python=python2.7 --no-site-packages`
 
@@ -34,11 +56,11 @@ How to install:
     `cp /usr/lib/python2.7/site-packages/xapian/ -r ../lib/python2.7/site-packages`
 
     At this point syncdb should work and you're up and running in a sane
-    environment. Follow the steps in "how to use tehorng" for what to do next.
+    environment.
 
+9. Remove the comment before the static serving line in urls.py and fire up
+   runserver. (We assume this is for development, the static serving is NOT
+   adequate for a production environment)
 
-How to use tehorng:
--------------------
-
-This needs to be written.
+10. Squeeze and enjoy.
 
