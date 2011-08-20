@@ -115,7 +115,7 @@ def report_link(request, artist, album, link):
                user = request.user
                subject = "An %s you uploaded was reported on tehorng!" % (report.ctype,)
                from_email = "Tehorng Staff <staff@tehorng.com>"
-               top = "'%s' has reported '%s' for the following reason:\n\n" % (user, report.object.url)
+               top = "'%s' has reported '%s' for the following reason:\n\n" % (user, report.content_object.url)
                message = top + reason
                send_mail(subject, message, from_email, [uploader.email])
                
