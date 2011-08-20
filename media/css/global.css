@@ -24,11 +24,15 @@ a:hover { color: #333; }
 .g { color: green }
 .y { color: #f0e441}
 .r { color: red }
-.twitter-share-button {
-    position: absolute;
-    left: 100px;
-    top: -45px;
+#social-nav {
+    position:absolute;
+    left: 0;
+    top: -48px;
 }
+.twitter-share-button {
+}
+
+
 span.username, span.inbox { font-size: 85%; }
 span.staff, span.admin, span.user {
     display: block;

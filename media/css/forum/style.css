@@ -1,4 +1,6 @@
-body { font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif; font-size: 12px; margin: 0; padding: 1em; background-color: #fff; color: #000; }
+
+
+/* body { font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif; font-size: 12px; margin: 0; padding: 1em; background-color: #fff; color: #000; } */
 a img { border: none; }
 blockquote { border-left: 2px solid #595979; margin-left: 1em; padding-left: 6px; }
 img { vertical-align: text-bottom; }
@@ -18,10 +20,32 @@ a.unread img { vertical-align: middle; }
 /* Common formatting */
 .odd { background-color: #e9e9f9; }
 .even { background-color: #e3e3f3; }
-.module { border: 1px solid #ccc; margin-bottom: 1em; background-color: #fff; }
+.module { 
+    margin-bottom: 1em;
+    background-color: #fff; 
+}
 .module-body { padding: 4px 8px; }
 .no-margin { margin: 0; }
-.module h2, .module caption { overflow: hidden; margin: 0; padding: 2px 8px 3px 8px; font-size: 1em; text-align: left; font-weight: bold; background: #595979 url("../img/module-bg.gif") top left repeat-x; color: #fff; border-bottom: 0; }
+.module h2, .module caption {
+    overflow: hidden;
+    margin: 0;
+    padding: 2px 8px 3px 8px;
+    font-size: 1em;
+    text-align: left;
+    font-weight: bold;
+    background: #000 url("../img/module-bg.gif") top left repeat-x;
+    color: #fff;
+    border-bottom: 0;
+}
+.module h2 {
+    padding: 5px 8px;
+    border: 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+
+
 .module h2 a { color: #fff; }
 .module h2 span.title { float: left; }
 .module h2 span.controls { float: right; }
