@@ -33,3 +33,9 @@ class Report(models.Model):
     
     def __unicode__(self):
         return self.object_id
+
+    def notify(self, user=None, cobj=None):
+        #from django.core.mail import send_mail
+        from messaging.models import Message
+
+        pass 
