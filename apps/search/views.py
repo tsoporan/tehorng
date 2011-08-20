@@ -16,10 +16,11 @@ def search(request, template="search/search.html"):
     query = request.GET.get('q', '')
     if query:
         results = SearchQuerySet().filter(content=query)
-        q, created = Query.objects.get_or_create(text=query)
-        if not created:
-            q.hits += 1
-            q.save()
+        #Returns multiple, obsolete handled by google now.
+        #q, created = Query.objects.get_or_create(text__iexact=query)
+        #if not created:
+        #    q.hits += 1
+        #    q.save()
     else:
         results = None
     return render_to_response(template, {
