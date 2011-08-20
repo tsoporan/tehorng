@@ -4,9 +4,6 @@ from django.conf import settings
 
 admin.autodiscover()
 
-from search.views import OrngSearchView
-from haystack.forms import SearchForm
-
 from submissions.sitemaps import ArtistSitemap, AlbumSitemap
 from django.contrib.sitemaps import FlatPageSitemap
 from blog.sitemaps import EntrySitemap
@@ -51,7 +48,7 @@ urlpatterns = patterns('',
     url(r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
     url(r'^robots.txt$', 'django.views.generic.simple.direct_to_template', {'template': 'robots.txt'}),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^sentry/', include('sentry.urls')),
+    #url(r'^sentry/', include('sentry.urls')),
     url(r'^vote/', include('voting.urls')),
     url(r'^forum/', include('forum.urls')),
     ### Seriving static media with django 
