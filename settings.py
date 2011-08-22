@@ -173,8 +173,8 @@ SERVER_EMAIL = "your_email@domain.com"
 EMAIL_SUBJECT_PREFIX = "[Subject Prefix] "
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_DOMAIN = 'your domain'
-SESSION_COOKIE_NAME = 'your cookie name'
+SESSION_COOKIE_DOMAIN = 'localhost'
+SESSION_COOKIE_NAME = 'poodles'
 
 FORCE_LOWERCASE_TAGS = True 
 
