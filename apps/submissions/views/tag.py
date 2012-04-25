@@ -1,7 +1,7 @@
 from django.views.generic import list_detail
 from tagging.models import Tag, TaggedItem
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from submissions.models.artist import Artist
 from submissions.models.album import Album
 from blog.models import Entry
@@ -30,7 +30,7 @@ def tag_detail(request, filter, tag):
 	"""
 	View that displays the detailed tag.
 	"""
-	tag = Tag.objects.get(id=tag)
+	tag = get_object_or_404(Tag, id=tag)
 	if filter == 'artists':
 		taggeditems = TaggedItem.objects.filter(content_type=ContentType.objects.get_for_model(Artist), tag=tag)
 	elif filter == 'albums':
