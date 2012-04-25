@@ -14,3 +14,6 @@ pytz
 python-memcached
 feedparser
 redis
+unidecode
+textile
+markdown

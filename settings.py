@@ -121,7 +121,7 @@ INSTALLED_APPS = (
     #'history',
     #3rd Party
     'forum',
-    'django_keyerror',
+    #'django_keyerror',
     #'reversion',
     'haystack',
     'gravatar',
@@ -132,7 +132,7 @@ INSTALLED_APPS = (
     'south',
     'pagination',
     #'indexer',
-    'paging',
+    #'paging',
     #'sentry',
     #'sentry.client',
     'voting',
@@ -173,8 +173,8 @@ SERVER_EMAIL = "your_email@domain.com"
 EMAIL_SUBJECT_PREFIX = "[Subject Prefix] "
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_DOMAIN = 'your domain'
-SESSION_COOKIE_NAME = 'your cookie name'
+SESSION_COOKIE_DOMAIN = 'localhost'
+SESSION_COOKIE_NAME = 'poodles'
 
 FORCE_LOWERCASE_TAGS = True 
 

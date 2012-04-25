@@ -24,14 +24,18 @@ a:hover { color: #333; }
 .g { color: green }
 .y { color: #f0e441}
 .r { color: red }
+
 #social-nav {
     position:absolute;
     left: 0;
     top: -48px;
 }
-.twitter-share-button {
-}
 
+#social-nav li:nth-child(2) iframe{
+    margin-top:3px;
+    margin-bottom:-3px;
+    margin-right:-10px;
+}
 
 span.username, span.inbox { font-size: 85%; }
 span.staff, span.admin, span.user {
