@@ -1,0 +1,15 @@
+{% if emoticons %}
+{% load forum_tags %}
+<div class="module emoticon-help">
+  <table>
+  <thead>
+    <tr><th colspan="3">Emoticons</th></tr>
+  </thead>
+  <tbody id="emoticons">
+    {% for row in emoticons.items|partition:"3" %}<tr>
+      {% for symbol,image in row %}<td title="{{ symbol }}">{{ image|safe }}</td>{% endfor %}
+    </tr>{% endfor %}
+  </tbody>
+  </table>
+</div>
+{% endif %}

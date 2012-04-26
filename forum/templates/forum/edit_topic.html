@@ -1,0 +1,51 @@
+{% extends "forum/base.html" %}{% load forum_tags %}
+{% block main_content %}
+{% if topic.hidden %}
+<p class="description"><img src="{{ MEDIA_URL }}img/forum/icon_exclamation.gif" alt="Hidden"> This topic is hidden.</p>
+{% endif %}
+{% if topic.locked %}
+<p class="description"><img src="{{ MEDIA_URL }}img/forum/icon_lock.gif" alt="Locked"> This topic is locked.</p>
+{% endif %}
+<form name="editTopicForm" id="editTopicForm" action="." method="POST">
+{% csrf_token %}
+  <fieldset class="module aligned">
+    <h2>Topic</h2>
+    <div class="form-row">
+      {% if topic_form.title.errors %}{{ form.title.errors.as_ul }}{% endif %}
+      {{ form.title.label_tag }}
+      <div class="form-field">
+        {{ form.title }}
+      </div>
+    </div>
+    <div class="form-row">
+      {% if form.description.errors %}{{ form.description.errors.as_ul }}{% endif %}
+      {{ form.description.label_tag }}
+      <div class="form-field">
+        {{ form.description }}
+      </div>
+    </div>
+  </fieldset>
+  {% if user|is_moderator %}
+  <fieldset class="module aligned">
+    <h2>Moderation</h2>
+    <div class="form-row checkbox-row">
+      {% if form.pinned.errors %}{{ form.pinned.errors.as_ul }}{% endif %}
+      <label for="id_auto_fast_reply">{{ form.pinned }} Pinned</label>
+    </div>
+    <div class="form-row checkbox-row">
+      {% if form.locked.errors %}{{ form.locked.errors.as_ul }}{% endif %}
+      <label for="id_locked">{{ form.locked }} Locked</label>
+    </div>
+    <div class="form-row checkbox-row">
+      {% if form.hidden.errors %}{{ form.hidden.errors.as_ul }}{% endif %}
+      <label for="id_hidden">{{ form.hidden }} Hidden</label>
+    </div>
+  </fieldset>
+  {% endif %}
+  <div class="buttons">
+    <input type="submit" name="submit" value="Edit Topic">
+    or
+    <a href="{{ topic.get_absolute_url }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

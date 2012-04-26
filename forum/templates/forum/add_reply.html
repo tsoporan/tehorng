@@ -1,0 +1,52 @@
+{% extends "forum/base.html" %}{% load forum_tags %}
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/forum/PostForm.js"></script>
+{% endblock %}
+{% block breadcrumbs %}
+<a href="{% url forum_index %}">Forums</a>
+&raquo; <a href="{{ section.get_absolute_url }}">{{ section.name }}</a>
+&raquo; <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
+&raquo; <a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a>
+{% if meta %}&raquo; <a href="{{ topic.get_meta_url }}">Metaposts</a>{% endif %}
+&raquo; <strong>Add Reply</strong>
+{% endblock %}
+{% block main_content %}
+{% if preview %}
+<div class="module post-preview">
+  <h2>Reply Preview</h2>
+  <div class="body">
+  {{ preview|safe }}
+  </div>
+</div>
+{% endif %}
+<form name="addReplyForm" id="addReplyForm" action="{{ urls.add_reply }}" method="POST">
+{% csrf_token %}
+  <fieldset class="module aligned">
+    <h2>Reply</h2>
+    <div class="form-row">
+      {% if form.body.errors %}{{ form.body.errors.as_ul }}{% endif %}
+      <div class="form-field post-body-field">
+        {{ form.body }}
+      </div>
+      {% emoticon_help %}
+    </div>
+    <div class="form-row checkbox-row">
+      {% if form.emoticons.errors %}{{ form.emoticons.errors.as_ul }}{% endif %}
+      <label for="id_emoticons">{{ form.emoticons }} Enable emoticons</label>
+    </div>
+    {% if not meta %}
+    <div class="form-row checkbox-row">
+      {% if form.meta.errors %}{{ form.meta.errors.as_ul }}{% endif %}
+      <label for="id_meta">{{ form.meta }} Make this a Metapost</label>
+    </div>
+    {% endif %}
+  </fieldset>
+  <div class="buttons">
+    <input type="submit" name="submit" value="Add Reply">
+    <input type="submit" name="preview" value="Preview Reply">
+    or
+    <a href="{{ urls.topic_detail }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

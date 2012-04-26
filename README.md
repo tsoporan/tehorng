@@ -30,37 +30,19 @@ tehorng is built on Django a Python web framework. The assumption is that you
 have experience with Django and thus there is some terminology that is Django
 specific.
 
-1. `virtualenv tehorng_env --python=python2.7 --no-site-packages`
+1. `mkvirtualenv tehorng --python=python2.7`
 
-2. `cd tehorng_env/ && source bin/activate`
+2. `cd /where/ever/you/want/to/start/work`
 
 3. `git clone git@github.com:tsoporan/tehorng.git`
 
 4. `pip install -r requirements.txt`
 
-5. `touch .private-settings`
+5. `python manage.py syncdb`
 
-6. `./manage.py syncdb`
-
-7. At the time of writing this produces the error:
-
-    `haystack.exceptions.MissingDependency: The 'xapian' backend requires the installation of 'xapian'. Please refer to the documentation.`
-
-    This is because we need the installation of xapian for xapian-haystack to
-    work. Since this is in virtualenv we'll have to mimick this by copying over
-    xapian from /usr/lib/python (this means you should have xapian and
-    xapian-bindings installed system-wide)
-
-8. Once you have xapian and the bindings installed:
-
-    `cp /usr/lib/python2.7/site-packages/xapian/ -r ../lib/python2.7/site-packages`
-
-    At this point syncdb should work and you're up and running in a sane
-    environment.
-
-9. Remove the comment before the static serving line in urls.py and fire up
+6. Remove the comment before the static serving line in urls.py and fire up
    runserver. (We assume this is for development, the static serving is NOT
    adequate for a production environment)
 
-10. Squeeze and enjoy.
+7. Squeeze and enjoy.
 

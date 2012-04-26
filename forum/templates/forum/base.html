@@ -1,0 +1,26 @@
+{% extends "base_forum.html" %}
+{% block extrahead %}<script type="text/javascript" src="{{ MEDIA_URL }}js/forum/jquery-1.2.1.pack.js"></script>{% endblock %}
+
+{% block userbar %}
+{% if user.is_authenticated %}
+  <div id="authenticated">
+    Logged in as: <a class="user" href="{% url forum_user_profile user.id %}">{{ user.username }}</a> (<a href="{% url logout %}">Log out</a>)
+  </div>
+  <div id="user-tools">
+    <a href="{% url forum_new_posts %}">View New Posts</a> |
+    <a href="{% url forum_search %}">Search</a>
+  </div>
+{% else %}
+  <div id="anonymous">
+    <a href="{% url login %}">Log in</a> or <a href="{% url register %}">Sign up</a>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url forum_index %}">Forums</a>
+{% if section %}{% ifnotequal section.name title %}&raquo; <a href="{{ section.get_absolute_url }}">{{ section.name }}</a>{% endifnotequal %}{% endif %}
+{% if forum %}{% ifnotequal forum.name title %}&raquo; <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>{% endifnotequal %}{% endif %}
+{% if topic %}{% ifnotequal topic.title title %}&raquo; <a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a>{% endifnotequal %}{% endif %}
+{% if title %}&raquo; <strong>{{ title }}</strong>{% endif %}
+{% endblock %}

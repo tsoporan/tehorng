@@ -4,6 +4,17 @@
 {% block meta_desc %}search tehorng for music{% endblock %}
 {% block meta_keyw %}search, search tehorng, search artists, search albums, {{ block.super }}{% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.autocomplete.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+            $('#id_q').attr({ value: '{{ query }}' });
+    });
+    </script>
+{% endblock %}
+
+
 {% load thumbnail %}
 {% load pagination_tags %}
 {% block breadcrumbs %}
@@ -48,7 +59,7 @@
     </ul>
     {% paginate %}
     {% else %}
-        <p><strong> No results were found{% if query %}for {{ query }}{% endif %}.</strong></p>
+        <p><strong> No results were found{% if query %} for {{ query }}{% endif %}.</strong></p>
     {% endif %}
 </section> <!-- end results -->
 {% endblock %}

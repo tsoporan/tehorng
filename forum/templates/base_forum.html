@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block css %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/forum/style.css" media="all">
+  <!--[if LT IE 7]><link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/forum/ie.css" media="all"><![endif]-->
+{% endblock %}
+  
+{% block extrahead %}{% endblock %}
+
+{% block content %}
+
+{% block content_title %}{% endblock %}
+{% block main_content %}{% endblock %}
+
+{% endblock %}
+

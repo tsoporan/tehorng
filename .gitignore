@@ -17,8 +17,7 @@ media/albums/*
 media/cache
 media/admin
 
-xapian/*
-logs/*
+static/admin
 
 .hg
 .svn

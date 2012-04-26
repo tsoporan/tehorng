@@ -1,7 +1,9 @@
  <!DOCTYPE html>
 <!--
-    Oranges are good for you and so is learning! Feel free to use the code you find throughout tehorng in any way you'd like. 
-    You can learn more about how we built this site by visitng our /about/ us page. Happy surfing!
+    Oranges are good for you and so is learning! 
+    Feel free to use the code you find throughout tehorng in any way you'd like. 
+    If you'd like a more indepth look or to help out visit tehorng on github and join in: http://gjthub.com/tsoporan/tehorng
+    Squeeze and enjoy! 
     -staff@tehorng.com
 -->
 <html lang="en">
@@ -13,16 +15,16 @@
     <meta name="google-site-verification" content="36MS5r-UubdR0me-O5kPD8wtjDibmQaFIcfjbNu8V5E">
     <meta name="msvalidate.01" content="5B34C2CCEFDA8F0FFDA4ADAEF260B256">
     <meta name="y_key" content="bbf43d644505c4ab">
-    <link rel="icon" type="image/png" href="/media/img/orangefav.png">
+    <link rel="icon" type="image/png" href="{{ STATIC_URL }}img/orangefav.png">
     <link rel="alternate" type="application/rss+xml" title="Latest Artists" href="/feeds/artists/">
     <link rel="alternate" type="application/rss+xml" title="Latest Albums" href="/feeds/albums/">
     <link rel="alternate" type="application/rss+xml" title="Latest Links" href="/feeds/links/">
-    <link rel="alternate" type="application/rss+xml" title="Latest Blog Posts" href="/feeds/entries/">
+		<!--<link rel="alternate" type="application/rss+xml" title="Latest Blog Posts" href="/feeds/entries/">-->
 
     <!-- CSS -->
     {% block css %}
-    <link rel="stylesheet" type="text/css" href="/media/css/global.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/media/css/jquery-ui.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/global.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jquery-ui.css" media="screen">
     {% endblock %}
     <!-- JS -->
     {% block js %}
@@ -31,7 +33,7 @@
  
     <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
     <!--[if IE]>
-    <script type="text/javascript" src="/media/js/html5.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/html5.js"></script>
     <![endif]-->
     {% endblock %}
 </head>
@@ -44,7 +46,7 @@
             <li><a href="{% url search %}" title="search">search</a></li>
             <li><a href="{% url artist-index %}" title="artists">artists</a></li>
             <li><a href="{% url tag-index %}" title="tags">tags</a></li>
-            <li><a href="{% url entry-list %}" title="weblog">blog</a></li>
+						<!-- <li><a href="{# {% url entry-list %} #}" title="weblog">blog</a></li>-->
             <li><a class="issue-tracker" href="{% url issues-list %}" title="issue tracker">issue tracker</a></li>
         </ul>
 

@@ -1,0 +1,11 @@
+{% extends "forum/base.html" %}{% load i18n %}
+{% block title %}{% trans "Registration complete" %}{% endblock %}
+{% block breadcrumbs %}
+<a href="{% url forum_index %}">{% trans "Forums" %}</a>
+&raquo; <strong>{% trans "Registration complete" %}</strong>
+{% endblock %}
+{% block content_title %}<h1>{% trans "Registration complete" %}</h1>{% endblock %}
+{% block main_content %}
+{% load humanize %}
+<p>{% trans "An activation link has been sent to the email address you supplied, along with instructions for activating your account." %}</p>
+{% endblock %}

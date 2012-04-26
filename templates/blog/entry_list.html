@@ -3,7 +3,6 @@
 {% block body_class %}blog{% endblock %}
 {% load comments %}
 {% load markup %}
-{% load smiley_tags %}
 {% load tagging_tags %}
 {% block breadcrumbs %}
 	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
@@ -55,7 +54,7 @@
 			<h2><a href="{{ entry.get_absolute_url }}" title="read full {{ entry.title }}">{{ entry.title }}</a></h2>
         </header>
 		<p><strong class="helptext"><span class="gray">Posted {{ entry.created|date:"F j Y" }}</span> by {{ entry.author }}</strong></p>
-		<article>{{ entry.body|truncatewords_html:"100"|urlize|smileys|textile }}</article>
+		<article>{{ entry.body|truncatewords_html:"100"|urlize|textile }}</article>
 		<footer>
         {% if entry.tags %}
         {% tags_for_object entry as tags %}

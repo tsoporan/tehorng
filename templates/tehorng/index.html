@@ -4,7 +4,7 @@
 {% block body_class %}home{% endblock %}
 {% block js %}
 	{{ block.super }}
-	<script type="text/javascript" src="/media/js/jquery.autocomplete.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.autocomplete.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function () {
 		$('#id_q').click(function () {
@@ -66,7 +66,7 @@
 	<h3>fresh</h3>
 	<ul>
 		<li>
-			<h4> artists <span class="rss"><a href="/feeds/artists/" title="freshest artists rss"><img src="/media/img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
+                <h4> artists <span class="rss"><a href="/feeds/artists/" title="freshest artists rss"><img src="{{ STATIC_URL }}img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
 			<ul class="fresh-artists">
 			{% if latest_artists %}
 			{% for artist in latest_artists %}
@@ -81,7 +81,7 @@
 			</ul>
 		</li>
 		<li>
-			<h4> albums <span class="rss"><a href="/feeds/albums/" title="freshest albums rss"><img src="/media/img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
+                <h4> albums <span class="rss"><a href="/feeds/albums/" title="freshest albums rss"><img src="{{ STATIC_URL }}img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
 			<ul class="fresh-albums">
 			{% if latest_albums %}
 			{% for album in latest_albums %}
@@ -97,7 +97,7 @@
 			</ul>
 		</li>
 		<li>
-			<h4> links <span class="rss"><a href="/feeds/links/" title="freshest links rss"><img src="/media/img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
+                <h4> links <span class="rss"><a href="/feeds/links/" title="freshest links rss"><img src="{{ STATIC_URL }}img/rss_32.png" height="16" width="16" alt="rss"></a></span></h4>
 			<ul class="fresh-links">
 			{% if latest_links %}
 			{% for link in latest_links %}

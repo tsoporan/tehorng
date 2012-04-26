@@ -16,7 +16,6 @@
 {% load gravatar %}
 {% load comments %}
 {% load markup %}
-{% load smiley_tags %}
 
 {% block breadcrumbs %}
 	<li><a href="{% url index %}" title="Home">Home </a>&raquo;</li>
@@ -265,7 +264,7 @@
                     {% endif %}
                     </div>
 					<div class="comment-content">
-					{{ comment.comment|urlize|smileys|textile }}
+					{{ comment.comment|urlize|textile }}
 					</div>
 					<div class="comment-footer">
 					<a href="{{ comment.get_absolute_url }}"  title="permalink">permalink</a>

@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block page_title %}inbox{% endblock %}
 {% block body_class %}inbox{% endblock %}
-{% load smiley_tags %}
 {% load markup %}
 {% load pagination_tags %}
 {% block breadcrumbs %}
@@ -28,7 +27,7 @@
 	<tr {% if forloop.last %}id="last"{% endif %} {% if message.read %}class="read"{% endif %}>
 		<td> <input type="checkbox" value="{{ message.id }}" name="selected"> </td>
 		<td> <a href="{% url profile-user message.from_user %}" title="{{ message.from_user }} profile">{{ message.from_user }}</a></td>
-		<td class="text">{{ message|urlize|smileys|textile }}</td>
+		<td class="text">{{ message|urlize|textile }}</td>
 	    <td> {{ message.created|timesince }} ago</td>
         <td><a class="action" href="{% url sendpm-user message.from_user %}" title="reply to {{ message.from_user }}">Reply</td>
     </tr>

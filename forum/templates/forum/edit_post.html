@@ -1,0 +1,47 @@
+{% extends "forum/base.html" %}{% load forum_tags %}
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL }}forum/js/PostForm.js"></script>
+{% endblock %}
+{% block main_content %}
+{% if preview %}
+<div class="module post-preview">
+  <h2>Post Preview</h2>
+  <div class="body">
+  {{ preview|safe }}
+  </div>
+</div>
+{% endif %}
+<form name="editPostForm" id="editPostForm" action="." method="POST">
+{% csrf_token %}
+  <fieldset class="module aligned">
+    <h2>Post</h2>
+    <div class="form-row">
+      {% if form.body.errors %}{{ form.body.errors.as_ul }}{% endif %}
+      <div class="form-field post-body-field">
+        {{ form.body }}
+      </div>
+      {% emoticon_help %}
+    </div>
+    <div class="form-row checkbox-row">
+      {% if form.emoticons.errors %}{{ form.emoticons.errors.as_ul }}{% endif %}
+      <label for="id_emoticons">{{ form.emoticons }} Enable emoticons</label>
+    </div>
+  </fieldset>
+  {% if user|is_moderator %}
+  <fieldset class="module aligned">
+    <h2>Moderation</h2>
+    <div class="form-row checkbox-row">
+      {% if form.meta.errors %}{{ form.meta.errors.as_ul }}{% endif %}
+      <label for="id_meta">{{ form.meta }} Metapost</label>
+    </div>
+  </fieldset>
+  {% endif %}
+  <div class="buttons">
+    <input type="submit" name="submit" value="Edit Post">
+    <input type="submit" name="preview" value="Preview Post">
+    or
+    <a href="{{ post.get_absolute_url }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

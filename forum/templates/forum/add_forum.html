@@ -1,0 +1,41 @@
+{% extends "forum/base.html" %}
+{% block breadcrumbs %}
+<a href="{% url forum_index %}">Forums</a>
+&raquo; <a href="{{ section.get_absolute_url }}">{{ section.name }}</a>
+&raquo; <strong>Add Forum</strong>
+{% endblock %}
+{% block main_content %}
+<form name="addForumForm" id="addForumForm" action="." method="POST">
+{% csrf_token %}
+  <fieldset class="module aligned">
+    <h2>Forum</h2>
+    <div class="form-row">
+      {% if form.name.errors %}{{ form.name.errors.as_ul }}{% endif %}
+      {{ form.name.label_tag }}
+      <div class="form-field">
+        {{ form.name }}
+      </div>
+    </div>
+    <div class="form-row">
+      {% if form.description.errors %}{{ form.description.errors.as_ul }}{% endif %}
+      {{ form.description.label_tag }}
+      <div class="form-field">
+        {{ form.description }}
+      </div>
+    </div>
+    <div class="form-row">
+      {% if form.forum.errors %}{{ form.forum.errors.as_ul }}{% endif %}
+      <label for="id_forum">Insert before</label>
+      <div class="form-field">
+        {{ form.forum }}
+        <p class="help">Leave this field blank to insert the new Forum at the end.</p>
+      </div>
+    </div>
+  </fieldset>
+  <div class="buttons">
+    <input type="submit" name="submit" value="Add Forum">
+    or
+    <a href="{% url forum_index %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

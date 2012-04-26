@@ -6,7 +6,6 @@
 {% load markup %}
 {% load gravatar %}
 {% load tagging_tags %}
-{% load smiley_tags %}
 
 {% block breadcrumbs %}
 	<li><a href="{% url index %}" title="Home">Home</a> &raquo;</li>
@@ -46,7 +45,7 @@
 
 <section id="blog-content">
 <article>
-{{ entry.body|urlize|smileys|textile }}
+{{ entry.body|urlize|textile }}
 {% if entry.tags %}
 {% tags_for_object entry as tags %}
 <ul class="entry-tags">
