@@ -17,3 +17,4 @@ redis==2.4.11
 sorl-thumbnail==11.12
 textile==2.1.5
 wsgiref==0.1.2
+psycopg2==2.4.5
