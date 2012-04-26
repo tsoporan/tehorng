@@ -36,7 +36,7 @@
     <div class="stats-contain">
 	
     <div class="box">
-    <h3> artists by you <span class="orng">{{ profile.artists_for_user.count }}</span><a class="rss" href="{% url user-artist-feed user %}" title="{{ user }} artists feed"><img src="/media/img/rss_14.png" alt=""></a> </h3>
+        <h3> artists by you <span class="orng">{{ profile.artists_for_user.count }}</span><a class="rss" href="{% url user-artist-feed user %}" title="{{ user }} artists feed"><img src="{{ STATIC_URL }}img/rss_14.png" alt=""></a> </h3>
 	<ul>
 		{% if artists_for_user %}
 		{% for artist in artists_for_user %}
@@ -52,7 +52,7 @@
     </div> <!-- end box -->
 
     <div class="box">
-	<h3> albums by you <span class="orng">{{ profile.albums_for_user.count }} </span> <a class="rss" href="{% url user-album-feed user %}" title="{{ user }} albums feed"><img src="/media/img/rss_14.png" alt=""></a></h3>
+        <h3> albums by you <span class="orng">{{ profile.albums_for_user.count }} </span> <a class="rss" href="{% url user-album-feed user %}" title="{{ user }} albums feed"><img src="{{ STATIC_URL }}img/rss_14.png" alt=""></a></h3>
 	<ul>
 		{% if albums_for_user %}
 		{% for album in albums_for_user %}
@@ -69,7 +69,7 @@
     </div> <!-- end box -->
     
     <div class="box">
-	<h3> links by you <span class="orng">{{ profile.links_for_user.count }}</span><a class="rss" href="{% url user-link-feed user %}" title="{{ user }} links feed"><img src="/media/img/rss_14.png" alt=""></a></h3>
+        <h3> links by you <span class="orng">{{ profile.links_for_user.count }}</span><a class="rss" href="{% url user-link-feed user %}" title="{{ user }} links feed"><img src="{{ STATIC_URL }}img/rss_14.png" alt=""></a></h3>
 	<ul>
 		{% if links_for_user %}
 		{% for link in links_for_user %}
