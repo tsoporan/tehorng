@@ -1,0 +1,7 @@
+<uwsgi>
+    <pythonpath>/home/tsoporan/tehorng_env/lib/python2.7/site-packages</pythonpath>
+    <pythonpath>/home/tsoporan/tehorng_env/tehorng</pythonpath>
+    <app mountpoint="/">
+        <script>tehorng.wsgi</script>
+    </app>
+</uwsgi>
