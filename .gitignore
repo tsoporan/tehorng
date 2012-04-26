@@ -32,3 +32,4 @@ irc/
 
 .private-settings
 migrations
+whoosh_index
